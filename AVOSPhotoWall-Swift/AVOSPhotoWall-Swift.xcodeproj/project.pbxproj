@@ -1,0 +1,331 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8C610DEA19B43B84004A5E32 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C610DE919B43B84004A5E32 /* Images.xcassets */; };
+		8C610E0619B43C53004A5E32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C610E0019B43C53004A5E32 /* AppDelegate.swift */; };
+		8C610E0719B43C53004A5E32 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C610E0119B43C53004A5E32 /* Constants.swift */; };
+		8C610E0819B43C53004A5E32 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C610E0219B43C53004A5E32 /* LoginViewController.swift */; };
+		8C610E0919B43C53004A5E32 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C610E0319B43C53004A5E32 /* RegisterViewController.swift */; };
+		8C610E0A19B43C53004A5E32 /* UploadImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C610E0419B43C53004A5E32 /* UploadImageViewController.swift */; };
+		8C610E0B19B43C53004A5E32 /* WallPicturesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C610E0519B43C53004A5E32 /* WallPicturesViewController.swift */; };
+		8C610E0E19B43CA6004A5E32 /* AVOSCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C610E0D19B43CA6004A5E32 /* AVOSCloud.framework */; };
+		8C610E1019B43CE9004A5E32 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C610E0F19B43CE9004A5E32 /* UIKit.framework */; };
+		8C610E1219B43D15004A5E32 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C610E1119B43D15004A5E32 /* SystemConfiguration.framework */; };
+		8C610E1519B43D29004A5E32 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C610E1319B43D29004A5E32 /* CoreLocation.framework */; };
+		8C610E1619B43D29004A5E32 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C610E1419B43D29004A5E32 /* CoreTelephony.framework */; };
+		8C610E1819B43D34004A5E32 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C610E1719B43D34004A5E32 /* MobileCoreServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8C610DDD19B43B84004A5E32 /* AVOSPhotoWall-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AVOSPhotoWall-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C610DE119B43B84004A5E32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8C610DE919B43B84004A5E32 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8C610DFF19B43C52004A5E32 /* AVOSPhotoWall-Swift-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVOSPhotoWall-Swift-Bridging-Header.h"; sourceTree = "<group>"; };
+		8C610E0019B43C53004A5E32 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8C610E0119B43C53004A5E32 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		8C610E0219B43C53004A5E32 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		8C610E0319B43C53004A5E32 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		8C610E0419B43C53004A5E32 /* UploadImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadImageViewController.swift; sourceTree = "<group>"; };
+		8C610E0519B43C53004A5E32 /* WallPicturesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WallPicturesViewController.swift; sourceTree = "<group>"; };
+		8C610E0D19B43CA6004A5E32 /* AVOSCloud.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloud.framework; sourceTree = "<group>"; };
+		8C610E0F19B43CE9004A5E32 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		8C610E1119B43D15004A5E32 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		8C610E1319B43D29004A5E32 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		8C610E1419B43D29004A5E32 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		8C610E1719B43D34004A5E32 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8C610DDA19B43B84004A5E32 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8C610E1819B43D34004A5E32 /* MobileCoreServices.framework in Frameworks */,
+				8C610E1519B43D29004A5E32 /* CoreLocation.framework in Frameworks */,
+				8C610E1619B43D29004A5E32 /* CoreTelephony.framework in Frameworks */,
+				8C610E1219B43D15004A5E32 /* SystemConfiguration.framework in Frameworks */,
+				8C610E1019B43CE9004A5E32 /* UIKit.framework in Frameworks */,
+				8C610E0E19B43CA6004A5E32 /* AVOSCloud.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8C610DD419B43B84004A5E32 = {
+			isa = PBXGroup;
+			children = (
+				8C610DDF19B43B84004A5E32 /* AVOSPhotoWall-Swift */,
+				8C610E0C19B43CA6004A5E32 /* Frameworks */,
+				8C610DDE19B43B84004A5E32 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8C610DDE19B43B84004A5E32 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8C610DDD19B43B84004A5E32 /* AVOSPhotoWall-Swift.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8C610DDF19B43B84004A5E32 /* AVOSPhotoWall-Swift */ = {
+			isa = PBXGroup;
+			children = (
+				8C610E0019B43C53004A5E32 /* AppDelegate.swift */,
+				8C610E0119B43C53004A5E32 /* Constants.swift */,
+				8C610E0219B43C53004A5E32 /* LoginViewController.swift */,
+				8C610E0319B43C53004A5E32 /* RegisterViewController.swift */,
+				8C610E0419B43C53004A5E32 /* UploadImageViewController.swift */,
+				8C610E0519B43C53004A5E32 /* WallPicturesViewController.swift */,
+				8C610DE919B43B84004A5E32 /* Images.xcassets */,
+				8C610DE019B43B84004A5E32 /* Supporting Files */,
+				8C610DFF19B43C52004A5E32 /* AVOSPhotoWall-Swift-Bridging-Header.h */,
+			);
+			path = "AVOSPhotoWall-Swift";
+			sourceTree = "<group>";
+		};
+		8C610DE019B43B84004A5E32 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8C610DE119B43B84004A5E32 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8C610E0C19B43CA6004A5E32 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8C610E1719B43D34004A5E32 /* MobileCoreServices.framework */,
+				8C610E1319B43D29004A5E32 /* CoreLocation.framework */,
+				8C610E1419B43D29004A5E32 /* CoreTelephony.framework */,
+				8C610E1119B43D15004A5E32 /* SystemConfiguration.framework */,
+				8C610E0F19B43CE9004A5E32 /* UIKit.framework */,
+				8C610E0D19B43CA6004A5E32 /* AVOSCloud.framework */,
+			);
+			path = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8C610DDC19B43B84004A5E32 /* AVOSPhotoWall-Swift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8C610DF919B43B84004A5E32 /* Build configuration list for PBXNativeTarget "AVOSPhotoWall-Swift" */;
+			buildPhases = (
+				8C610DD919B43B84004A5E32 /* Sources */,
+				8C610DDA19B43B84004A5E32 /* Frameworks */,
+				8C610DDB19B43B84004A5E32 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AVOSPhotoWall-Swift";
+			productName = "AVOSPhotoWall-Swift";
+			productReference = 8C610DDD19B43B84004A5E32 /* AVOSPhotoWall-Swift.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8C610DD519B43B84004A5E32 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = AVOS;
+				TargetAttributes = {
+					8C610DDC19B43B84004A5E32 = {
+						CreatedOnToolsVersion = 6.0;
+					};
+				};
+			};
+			buildConfigurationList = 8C610DD819B43B84004A5E32 /* Build configuration list for PBXProject "AVOSPhotoWall-Swift" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8C610DD419B43B84004A5E32;
+			productRefGroup = 8C610DDE19B43B84004A5E32 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8C610DDC19B43B84004A5E32 /* AVOSPhotoWall-Swift */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8C610DDB19B43B84004A5E32 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8C610DEA19B43B84004A5E32 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8C610DD919B43B84004A5E32 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8C610E0819B43C53004A5E32 /* LoginViewController.swift in Sources */,
+				8C610E0619B43C53004A5E32 /* AppDelegate.swift in Sources */,
+				8C610E0B19B43C53004A5E32 /* WallPicturesViewController.swift in Sources */,
+				8C610E0A19B43C53004A5E32 /* UploadImageViewController.swift in Sources */,
+				8C610E0719B43C53004A5E32 /* Constants.swift in Sources */,
+				8C610E0919B43C53004A5E32 /* RegisterViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8C610DF719B43B84004A5E32 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8C610DF819B43B84004A5E32 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8C610DFA19B43B84004A5E32 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				INFOPLIST_FILE = "AVOSPhotoWall-Swift/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "AVOSPhotoWall-Swift/AVOSPhotoWall-Swift-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8C610DFB19B43B84004A5E32 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				INFOPLIST_FILE = "AVOSPhotoWall-Swift/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "AVOSPhotoWall-Swift/AVOSPhotoWall-Swift-Bridging-Header.h";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8C610DD819B43B84004A5E32 /* Build configuration list for PBXProject "AVOSPhotoWall-Swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C610DF719B43B84004A5E32 /* Debug */,
+				8C610DF819B43B84004A5E32 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8C610DF919B43B84004A5E32 /* Build configuration list for PBXNativeTarget "AVOSPhotoWall-Swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C610DFA19B43B84004A5E32 /* Debug */,
+				8C610DFB19B43B84004A5E32 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8C610DD519B43B84004A5E32 /* Project object */;
+}
