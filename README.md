@@ -9,3 +9,6 @@
 * [VZ](VZ)，微转，一个基于微博的数码设备平台, 客户端和后台全部基于AVOSCloud服务实现。
 * [KeepAlive](KeepAlive)，一个基于 AVOSCloud 实时通信 SDK 的聊天室应用。
 * [AVOSPhotoWall-Swift](AVOSPhotoWall-Swift)，一个基于 AVOSCloud 的照片墙应用，使用Swift语言开发。
+
+
+[AVOS Cloud 站点下载地址](https://download.avoscloud.com/demo/)
