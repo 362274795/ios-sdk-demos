@@ -155,17 +155,6 @@
     self.usernameField.text = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USERNAME];
     [self changeButtonState:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeButtonState:) name:UITextFieldTextDidChangeNotification object:nil];
-    
-//    [AVUser requestMobilePhoneVerify:@"18911209919" withBlock:nil];
-//    [AVUser verifyMobilePhone:@"080710" withBlock:nil];
-//    [AVUser requestLoginSmsCode:@"18911209919" withBlock:nil];
-//    [AVOSCloud requestSmsCodeWithPhoneNumber:@"18911209919" callback:nil];
-//    [AVOSCloud requestSmsCodeWithPhoneNumber:<#(NSString *)#>
-//                                     appName:<#(NSString *)#>
-//                                   operation:<#(NSString *)#>
-//                                  timeToLive:<#(NSUInteger)#>
-//                                    callback:<#^(BOOL succeeded, NSError *error)callback#>]
-//    [AVOSCloud verifySmsCode:@"066225" callback:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -187,36 +176,6 @@
 #pragma mark Actions
 //Login button pressed
 -(void)login:(id)sender {
-//    [AVUser logInWithMobilePhoneNumberInBackground:self.usernameField.text smsCode:self.passwordField.text block:^(AVUser *user, NSError *error) {
-//        if (user) {
-//            //Login success
-//            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:KEY_ISLOGINED];
-//            [[NSUserDefaults standardUserDefaults] setObject:self.usernameField.text forKey:KEY_USERNAME];
-//            NSLog(@"Login success");
-//            CDAppDelegate *delegate = (CDAppDelegate *)[UIApplication sharedApplication].delegate;
-//            [delegate toMain];
-//        } else {
-//            //Something bad has ocurred
-//            NSString *errorString = [[error userInfo] objectForKey:@"error"];
-//            UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//            [errorAlertView show];
-//        }
-//    }];
-//    [AVUser logInWithMobilePhoneNumberInBackground:self.usernameField.text password:self.passwordField.text block:^(AVUser *user, NSError *error) {
-//        if (user) {
-//            //Login success
-//            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:KEY_ISLOGINED];
-//            [[NSUserDefaults standardUserDefaults] setObject:self.usernameField.text forKey:KEY_USERNAME];
-//            NSLog(@"Login success");
-//            CDAppDelegate *delegate = (CDAppDelegate *)[UIApplication sharedApplication].delegate;
-//            [delegate toMain];
-//        } else {
-//            //Something bad has ocurred
-//            NSString *errorString = [[error userInfo] objectForKey:@"error"];
-//            UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-//            [errorAlertView show];
-//        }
-//    }];
     [AVUser logInWithUsernameInBackground:self.usernameField.text password:self.passwordField.text block:^(AVUser *user, NSError *error) {
         if (user) {
             //Login success
@@ -278,7 +237,6 @@
 - (void)keyboardWillShow:(NSNotification *)notification {
     [self performSelector:@selector(moveUpMainView) withObject:nil afterDelay:0.1];
 }
-
 
 - (void)keyboardWillHide:(NSNotification *)notification{
     UIScrollView *scrollView = (UIScrollView *)self.view;

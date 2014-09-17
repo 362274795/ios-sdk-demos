@@ -301,6 +301,25 @@ A AVOS Cloud Framework User Object that is a local representation of a user pers
 + (void)requestPasswordResetForEmailInBackground:(NSString *)email
                                            block:(AVBooleanResultBlock)block;
 
+/*!
+ *  使用手机号请求密码重置，需要用户绑定手机号码
+ *  发送短信到指定的手机上，内容有6位数字验证码。验证码10分钟内有效。
+ *  @param phoneNumber 11位电话号码
+ *  @param block 回调结果
+ */
++(void)requestPasswordResetWithPhoneNumber:(NSString *)phoneNumber
+                                     block:(AVBooleanResultBlock)block;
+
+/*!
+ *  使用验证码重置密码
+ *  @param code 6位验证码
+ *  @param password 新密码
+ *  @param block 回调结果
+ */
++(void)resetPasswordWithSmsCode:(NSString *)code
+                    newPassword:(NSString *)password
+                          block:(AVBooleanResultBlock)block;
+
 /** @name Querying for Users */
 
 /*!

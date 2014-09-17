@@ -52,8 +52,6 @@
         name = [NSString stringWithFormat:@"group:%@", name];
     }
     self.nameLabel.text = name;
-    //    [[AVUser currentUser] setMobilePhoneNumber:@"18911209919"];
-    //    [[AVUser currentUser] save];
 }
 
 - (void)didReceiveMemoryWarning {

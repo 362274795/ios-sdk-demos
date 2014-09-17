@@ -43,9 +43,6 @@ enum : NSUInteger {
 - (void)startFetchUserList {
     AVQuery * query = [AVUser query];
     query.cachePolicy = kAVCachePolicyIgnoreCache;
-//    
-//    //设置缓存有效期
-//    query.maxCacheAge = 4 * 3600;
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (objects) {
