@@ -22,7 +22,7 @@ typedef enum : NSUInteger {
 - (NSArray *)chatRooms;
 - (void)addChatWithPeerId:(NSString *)peerId;
 - (AVGroup *)joinGroup:(NSString *)groupId;
-- (AVGroup *)startNewGroup;
+- (void)startNewGroup:(AVGroupResultBlock)callback;
 - (void)sendMessage:(NSString *)message toPeerId:(NSString *)peerId;
 - (void)sendMessage:(NSString *)message toGroup:(NSString *)groupId;
 - (NSArray *)getMessagesForPeerId:(NSString *)peerId;

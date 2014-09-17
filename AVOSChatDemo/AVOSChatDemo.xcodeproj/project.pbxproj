@@ -15,8 +15,8 @@
 		8C470CB11992625B006A4E87 /* QREncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C470CAE1992625B006A4E87 /* QREncoder.mm */; };
 		8C470CB8199264B0006A4E87 /* CDChatDetailController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C470CB7199264B0006A4E87 /* CDChatDetailController.mm */; };
 		8C470CBB19926893006A4E87 /* CDChatConfirmController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C470CBA19926893006A4E87 /* CDChatConfirmController.m */; };
-		8C732C4419A3151D0011C9E4 /* AVOSCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C732C4219A3151D0011C9E4 /* AVOSCloud.framework */; };
-		8C732C4519A3151D0011C9E4 /* AVOSCloudSNS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C732C4319A3151D0011C9E4 /* AVOSCloudSNS.framework */; };
+		8C4ECC3B19C940920069A485 /* AVOSCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C4ECC3919C940920069A485 /* AVOSCloud.framework */; };
+		8C4ECC3C19C940920069A485 /* AVOSCloudSNS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C4ECC3A19C940920069A485 /* AVOSCloudSNS.framework */; };
 		8C76A193199372E800709CE4 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C76A192199372E800709CE4 /* Icon@2x.png */; };
 		8C76C24B19888CFB000940E1 /* CDPopMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C76C24A19888CFB000940E1 /* CDPopMenuItem.m */; };
 		8C76C25219888DD5000940E1 /* CDPopMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C76C25119888DD5000940E1 /* CDPopMenu.m */; };
@@ -203,8 +203,8 @@
 		8C470CB7199264B0006A4E87 /* CDChatDetailController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDChatDetailController.mm; sourceTree = "<group>"; };
 		8C470CB919926893006A4E87 /* CDChatConfirmController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDChatConfirmController.h; sourceTree = "<group>"; };
 		8C470CBA19926893006A4E87 /* CDChatConfirmController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDChatConfirmController.m; sourceTree = "<group>"; };
-		8C732C4219A3151D0011C9E4 /* AVOSCloud.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloud.framework; sourceTree = "<group>"; };
-		8C732C4319A3151D0011C9E4 /* AVOSCloudSNS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloudSNS.framework; sourceTree = "<group>"; };
+		8C4ECC3919C940920069A485 /* AVOSCloud.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloud.framework; sourceTree = "<group>"; };
+		8C4ECC3A19C940920069A485 /* AVOSCloudSNS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloudSNS.framework; sourceTree = "<group>"; };
 		8C76A192199372E800709CE4 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		8C76C24919888CFB000940E1 /* CDPopMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPopMenuItem.h; sourceTree = "<group>"; };
 		8C76C24A19888CFB000940E1 /* CDPopMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPopMenuItem.m; sourceTree = "<group>"; };
@@ -374,13 +374,13 @@
 				8CB3085B1980FC1400BDC34D /* SystemConfiguration.framework in Frameworks */,
 				8CB308591980FBF900BDC34D /* CoreTelephony.framework in Frameworks */,
 				8CB308571980FBEC00BDC34D /* MobileCoreServices.framework in Frameworks */,
-				8C732C4519A3151D0011C9E4 /* AVOSCloudSNS.framework in Frameworks */,
+				8C4ECC3C19C940920069A485 /* AVOSCloudSNS.framework in Frameworks */,
 				8CB308551980FBD900BDC34D /* CoreLocation.framework in Frameworks */,
 				8CF21DCD197FCCC1002B9220 /* CoreGraphics.framework in Frameworks */,
 				8CF21DCF197FCCC1002B9220 /* UIKit.framework in Frameworks */,
 				8C470C5C199257E3006A4E87 /* libZXingWidget.a in Frameworks */,
 				8CF21DCB197FCCC1002B9220 /* Foundation.framework in Frameworks */,
-				8C732C4419A3151D0011C9E4 /* AVOSCloud.framework in Frameworks */,
+				8C4ECC3B19C940920069A485 /* AVOSCloud.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,8 +796,8 @@
 		8CF21DC9197FCCC1002B9220 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8C732C4219A3151D0011C9E4 /* AVOSCloud.framework */,
-				8C732C4319A3151D0011C9E4 /* AVOSCloudSNS.framework */,
+				8C4ECC3919C940920069A485 /* AVOSCloud.framework */,
+				8C4ECC3A19C940920069A485 /* AVOSCloudSNS.framework */,
 				8C470C9C19926019006A4E87 /* libiconv.dylib */,
 				8C470C5B199257E3006A4E87 /* libZXingWidget.a */,
 				8CF21DCC197FCCC1002B9220 /* CoreGraphics.framework */,

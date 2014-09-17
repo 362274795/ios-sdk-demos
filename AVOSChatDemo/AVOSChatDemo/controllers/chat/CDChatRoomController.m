@@ -48,22 +48,12 @@
     
     self.delegate = self;
     self.dataSource = self;
-
-//    if (self.group.groupId) {
-//    AVObject *groupObject = [AVObject objectWithoutDataWithClassName:@"AVOSRealtimeGroups" objectId:self.group.groupId];
-//    [groupObject fetch];
-//    NSArray *groupMembers = [groupObject objectForKey:@"m"];
-//        
-//        [self.group invite:@[@"peerId1",@"peerId2",@"peerId3"]];
-//        [self.group kick:@[@"peerId1",@"peerId2",@"peerId3"]];
-//    }
-//    self.messageArray = [NSMutableArray array];
-//    self.timestamps = [NSMutableArray array];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self messageUpdated:nil];
+    [AVAnalytics event:@"likebutton" attributes:@{@"source":@{@"view": @"week"}, @"do":@"unfollow"}];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -109,23 +99,6 @@
 
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
-//    [self.messageArray addObject:[NSDictionary dictionaryWithObject:text forKey:@"Text"]];
-//    
-//    [self.timestamps addObject:[NSDate date]];
-//    
-//    if((self.messageArray.count - 1) % 2)
-//        [JSMessageSoundEffect playMessageSentSound];
-//    else
-//        [JSMessageSoundEffect playMessageReceivedSound];
-//    NSString *message = [[textView.text stringByReplacingCharactersInRange:range withString:text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-//    [dict setObject:self.session.getSelfPeerId forKey:@"dn"];
-//    [dict setObject:text forKey:@"msg"];
-//    NSError *error = nil;
-//    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
-//    NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//    [self.session sendMessage:message isTransient:NO toPeerIds:self.session.getAllPeers];
-//    [_messages addObject:[[KAMessage alloc] initWithDisplayName:MY_NAME Message:message fromMe:YES]];
     if (self.type == CDChatRoomTypeGroup) {
         if (!self.group.groupId) {
             return;
@@ -237,13 +210,11 @@
 }
 
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return [self.timestamps objectAtIndex:indexPath.row];
     NSDate *time = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"time"];
     return time;
 }
 
 - (NSString *)nameForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //    return [self.timestamps objectAtIndex:indexPath.row];
     NSString *name = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"fromid"];
     return name;
 }

@@ -23,6 +23,9 @@
     
     [AVOSCloud setApplicationId:AVOSAppID
                       clientKey:AVOSAppKey];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+        [AVAnalytics setCrashReportEnabled:NO];
+//    });
     //统计应用启动情况
     [AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
