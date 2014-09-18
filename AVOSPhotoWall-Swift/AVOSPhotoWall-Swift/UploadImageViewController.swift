@@ -83,7 +83,7 @@ class UploadImageViewController: UIViewController, UIImagePickerControllerDelega
         imgPicker.delegate = self;
         imgPicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
         
-        self.navigationController.presentViewController(imgPicker, animated: true, completion: {})
+        self.navigationController!.presentViewController(imgPicker, animated: true, completion: {})
     }
     
     func sendPressed(sender:AnyObject) {
@@ -93,7 +93,7 @@ class UploadImageViewController: UIViewController, UIImagePickerControllerDelega
             return
         }
         self.commentTextField!.resignFirstResponder()
-        self.navigationItem.rightBarButtonItem.enabled = false
+        self.navigationItem.rightBarButtonItem!.enabled = false
         //Place the loading spinner
         var loadingSpinner:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
         loadingSpinner.center = CGPointMake(self.view.frame.size.width/2.0, self.view.frame.size.height/2.0)
@@ -127,7 +127,7 @@ class UploadImageViewController: UIViewController, UIImagePickerControllerDelega
                     succeeded, error in
                     if (succeeded){
                         //Go back to the wall
-                        s.navigationController.popViewControllerAnimated(true)
+                        s.navigationController!.popViewControllerAnimated(true)
                     }
                     else{
 //                        var userInfo:Dictionary! = error.userInfo

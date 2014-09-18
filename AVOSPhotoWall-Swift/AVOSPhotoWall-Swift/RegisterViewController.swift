@@ -83,7 +83,7 @@ class RegisterViewController: UIViewController {
             if (error == nil) {
                 //Open the wall
                 var vc:WallPicturesViewController = WallPicturesViewController()
-                self.navigationController.pushViewController(vc, animated: true)
+                self.navigationController!.pushViewController(vc, animated: true)
             } else {
                 //Something bad has ocurred
 //                var userInfo:Dictionary! = error.userInfo!

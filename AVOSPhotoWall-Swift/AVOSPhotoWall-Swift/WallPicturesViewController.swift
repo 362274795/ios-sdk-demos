@@ -169,12 +169,12 @@ class WallPicturesViewController: UIViewController {
     }
     
     func logoutPressed(sender:AnyObject) {
-        self.navigationController.popViewControllerAnimated(true)
+        self.navigationController!.popViewControllerAnimated(true)
     }
     
     func goUpload(sender:AnyObject) {
         var vc:UploadImageViewController = UploadImageViewController()
-        self.navigationController.pushViewController(vc, animated: true)
+        self.navigationController!.pushViewController(vc, animated: true)
     }
     
     
