@@ -45,6 +45,7 @@ typedef NS_ENUM(int, AVOSCloudSNSErrorCode){
     
 };
 
+#import "AVUser+SNS.h"
 /**
  *  AVOSCloudSNS错误域
  */
