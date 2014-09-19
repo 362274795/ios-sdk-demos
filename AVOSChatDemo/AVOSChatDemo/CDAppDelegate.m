@@ -20,6 +20,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [AVLogger setLoggerLevelMask:AVLoggerLevelAll];
+    [AVLogger addLoggerDomain:AVLoggerDomainIM];
+    [AVLogger addLoggerDomain:AVLoggerDomainCURL];
     
     [AVOSCloud setApplicationId:AVOSAppID
                       clientKey:AVOSAppKey];

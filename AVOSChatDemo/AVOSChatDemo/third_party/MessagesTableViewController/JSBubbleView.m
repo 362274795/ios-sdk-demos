@@ -280,7 +280,7 @@ CGFloat const kJSAvatarSize = 50.0f;
             
             CGSize imageSize = [JSBubbleView imageSizeForImage:recivedImg];
             
-            CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 0.0f);
+            CGFloat imgX = image.leftCapWidth - 3.0f + (self.type == JSBubbleMessageTypeOutgoing ? bubbleFrame.origin.x : 10.0f);
             
             CGRect imageFrame = CGRectMake(imgX - 3.f,
                                           kPaddingTop,

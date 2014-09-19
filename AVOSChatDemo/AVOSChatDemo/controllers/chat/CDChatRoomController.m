@@ -9,10 +9,13 @@
 #import "CDChatRoomController.h"
 #import "CDSessionManager.h"
 #import "CDChatDetailController.h"
+#import "QBImagePickerController.h"
+#import "UIImage+Resize.h"
 
-@interface CDChatRoomController () <JSMessagesViewDelegate, JSMessagesViewDataSource> {
+@interface CDChatRoomController () <JSMessagesViewDelegate, JSMessagesViewDataSource, QBImagePickerControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate> {
     NSMutableArray *_timestampArray;
     NSDate *_lastTime;
+    NSMutableDictionary *_loadedData;
 }
 @property (nonatomic, strong) NSArray *messages;
 @end
@@ -26,6 +29,7 @@
 - (instancetype)init {
     if ((self = [super init])) {
         self.hidesBottomBarWhenPushed = YES;
+        _loadedData = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -53,7 +57,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self messageUpdated:nil];
-    [AVAnalytics event:@"likebutton" attributes:@{@"source":@{@"view": @"week"}, @"do":@"unfollow"}];
+//    [AVAnalytics event:@"likebutton" attributes:@{@"source":@{@"view": @"week"}, @"do":@"unfollow"}];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -111,12 +115,26 @@
     [self finishSend];
 }
 
+- (void)sendAttachment:(AVObject *)object {
+    if (self.type == CDChatRoomTypeGroup) {
+        if (!self.group.groupId) {
+            return;
+        }
+        [[CDSessionManager sharedInstance] sendAttachment:object toGroup:self.group.groupId];
+    } else {
+        [[CDSessionManager sharedInstance] sendAttachment:object toPeerId:self.otherId];
+    }
+    [self refreshTimestampArray];
+    [self finishSend];
+
+}
+
 - (void)cameraPressed:(id)sender{
     
-//    [self.inputToolBarView.textView resignFirstResponder];
-//    
-//    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"相册", nil];
-//    [actionSheet showInView:self.view];
+    [self.inputToolBarView.textView resignFirstResponder];
+
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"相册", nil];
+    [actionSheet showInView:self.view];
 }
 
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -130,7 +148,15 @@
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *type = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"type"];
+
+    if ([type isEqualToString:@"text"]) {
+        return JSBubbleMediaTypeText;
+    } else if ([type isEqualToString:@"image"]) {
+        return JSBubbleMediaTypeImage;
+    }
     return JSBubbleMediaTypeText;
+
 //    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
 //        return JSBubbleMediaTypeText;
 //    }else if ([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
@@ -245,11 +271,26 @@
 }
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
-//        return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"];
-//    }
-    return nil;
-    
+    NSNumber *r = @(indexPath.row);
+    AVFile *file = [_loadedData objectForKey:r];
+    if (file) {
+        NSData *data = [file getData];
+        UIImage *image = [[UIImage alloc] initWithData:data];
+        return image;
+    } else {
+        NSString *objectId = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"object"];
+        NSString *type = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"type"];
+        AVObject *object = [AVObject objectWithoutDataWithClassName:@"Attachments" objectId:objectId];
+        [object fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+            AVFile *file = [object objectForKey:type];
+            [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+                [_loadedData setObject:file forKey:r];
+                [self.tableView reloadData];
+            }];
+        }];
+        UIImage *image = [UIImage imageNamed:@"image_placeholder"];
+        return image;
+    }
 }
 
 - (void)messageUpdated:(NSNotification *)notification {
@@ -277,5 +318,118 @@
         }
         self.title = title;
     }
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0:
+        {
+            UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+            imagePickerController.delegate = self;
+            imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [self presentViewController:imagePickerController animated:YES completion:^{
+                
+            }];
+        }
+            break;
+        case 1:
+        {
+            QBImagePickerController *imagePickerController = [[QBImagePickerController alloc] init];
+            imagePickerController.delegate = self;
+            imagePickerController.allowsMultipleSelection = NO;
+            //            imagePickerController.minimumNumberOfSelection = 3;
+            
+            //                [self.navigationController pushViewController:imagePickerController animated:YES];
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:imagePickerController];
+            [self presentViewController:navigationController animated:YES completion:^{
+                
+            }];
+
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)dismissImagePickerController
+{
+    if (self.presentedViewController) {
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    } else {
+        [self.navigationController popToViewController:self animated:YES];
+    }
+}
+
+#pragma mark - QBImagePickerControllerDelegate
+
+- (void)qb_imagePickerController:(QBImagePickerController *)imagePickerController didSelectAsset:(ALAsset *)asset
+{
+    NSLog(@"*** qb_imagePickerController:didSelectAsset:");
+    NSLog(@"%@", asset);
+    ALAssetRepresentation *representation = [asset defaultRepresentation];
+    Byte *buffer = (Byte*)malloc((unsigned long)representation.size);
+    
+    // add error checking here
+    NSUInteger buffered = [representation getBytes:buffer fromOffset:0.0 length:(NSUInteger)representation.size error:nil];
+    NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+    if (data) {
+        AVFile *imageFile = [AVFile fileWithName:@"image.png" data:data];
+        [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                AVObject *object = [AVObject objectWithClassName:@"Attachments"];
+                [object setObject:@"image" forKey:@"type"];
+                [object setObject:imageFile forKey:@"image"];
+                [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        [self sendAttachment:object];
+                    }
+                }];
+            }
+        }];
+    }
+    [self dismissImagePickerController];
+}
+
+- (void)qb_imagePickerController:(QBImagePickerController *)imagePickerController didSelectAssets:(NSArray *)assets
+{
+    NSLog(@"*** qb_imagePickerController:didSelectAssets:");
+    NSLog(@"%@", assets);
+    
+    [self dismissImagePickerController];
+}
+
+- (void)qb_imagePickerControllerDidCancel:(QBImagePickerController *)imagePickerController
+{
+    NSLog(@"*** qb_imagePickerControllerDidCancel:");
+    
+    [self dismissImagePickerController];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    if (!image) {
+        image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    }
+    if (image) {
+        UIImage *scaledImage = [image resizedImageToFitInSize:CGSizeMake(1080, 1920) scaleIfSmaller:NO];
+
+        NSData *imageData = UIImageJPEGRepresentation(scaledImage, 0.6);
+        NSLog(@"image size %lu", (unsigned long)[imageData length]);
+        AVFile *imageFile = [AVFile fileWithName:@"image.png" data:imageData];
+        [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                AVObject *object = [AVObject objectWithClassName:@"Attachments"];
+                [object setObject:@"image" forKey:@"type"];
+                [object setObject:imageFile forKey:@"image"];
+                [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded) {
+                        [self sendAttachment:object];
+                    }
+                }];
+            }
+        }];
+    }
+    [self dismissImagePickerController];
 }
 @end
