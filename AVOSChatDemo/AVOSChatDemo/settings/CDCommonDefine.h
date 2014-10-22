@@ -9,9 +9,10 @@
 #ifndef AVOSChatDemo_CDCommonDefine_h
 #define AVOSChatDemo_CDCommonDefine_h
 
-#error 在这里设置你自己的AppID和AppKey，设置好了删除此行
-#define AVOSAppID @""
-#define AVOSAppKey @""
+//#error 在这里设置你自己的AppID和AppKey，设置好了删除此行
+
+#define AVOSAppID @"bhtojqyzlsrbz9z34s7snxgzxblduzy2jvj5cdblc3cka2bq"
+#define AVOSAppKey @"zcbu9s9twkm9ud6obfj6ctx4qio3juf4j71syws0s3a9anm6"
 
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1]
 #define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]

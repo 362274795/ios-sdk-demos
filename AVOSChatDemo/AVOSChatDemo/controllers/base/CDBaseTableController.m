@@ -15,7 +15,7 @@
 @implementation CDBaseTableController
 - (void)loadView {
     [super loadView];
-    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
+    if ([self respondsToSelector:@selector(automaticalyAdjustsScrollViewInsets)]) {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
