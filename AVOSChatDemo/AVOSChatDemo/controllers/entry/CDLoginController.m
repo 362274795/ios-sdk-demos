@@ -12,6 +12,7 @@
 #import "CDRegisterController.h"
 #import "CDBaseNavigationController.h"
 #import "CDAppDelegate.h"
+#import "User.h"
 
 @interface CDLoginController () <UITextFieldDelegate> {
     CGPoint _originOffset;
@@ -217,7 +218,8 @@
 //            [errorAlertView show];
 //        }
 //    }];
-    [AVUser logInWithUsernameInBackground:self.usernameField.text password:self.passwordField.text block:^(AVUser *user, NSError *error) {
+    
+    [User logInWithUsernameInBackground:self.usernameField.text password:self.passwordField.text block:^(AVUser *user, NSError *error) {
         if (user) {
             //Login success
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:KEY_ISLOGINED];

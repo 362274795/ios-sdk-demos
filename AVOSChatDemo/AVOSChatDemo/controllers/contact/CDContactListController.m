@@ -9,6 +9,8 @@
 #import "CDContactListController.h"
 #import "CDCommon.h"
 #import "CDContactDetailController.h"
+#import "UserService.h"
+#import "CDAddFriendController.h"
 
 enum : NSUInteger {
     kTagNameLabel = 10000,
@@ -28,6 +30,14 @@ enum : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]
+                                            initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                            target:self action:@selector(goAddFriend:)];
+}
+
+-(void)goAddFriend:(UIBarButtonItem*)buttonItem{
+    CDAddFriendController *controller=[[CDAddFriendController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -41,13 +51,7 @@ enum : NSUInteger {
 }
 
 - (void)startFetchUserList {
-    AVQuery * query = [AVUser query];
-    query.cachePolicy = kAVCachePolicyIgnoreCache;
-//    
-//    //设置缓存有效期
-//    query.maxCacheAge = 4 * 3600;
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [UserService findFriends:^(NSArray *objects, NSError *error) {
         if (objects) {
             NSMutableArray *users = [NSMutableArray array];
             for (AVUser *user in objects) {
