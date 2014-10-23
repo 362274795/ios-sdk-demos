@@ -264,7 +264,8 @@
     if(!cell)
         cell = [[JSBubbleMessageCell alloc] initWithBubbleType:type
                                                    bubbleStyle:bubbleStyle
-                                                   avatarStyle:(hasAvatar) ? avatarStyle : JSAvatarStyleNone mediaType:mediaType
+                                                   avatarStyle:(hasAvatar) ? avatarStyle : JSAvatarStyleNone
+                                                     mediaType:mediaType
                                                   hasTimestamp:hasTimestamp
                                                        hasName:hasName
                                                reuseIdentifier:CellID];

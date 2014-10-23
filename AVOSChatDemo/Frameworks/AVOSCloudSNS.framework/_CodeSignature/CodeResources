@@ -6,11 +6,11 @@
 	<dict>
 		<key>Headers/AVOSCloudSNS.h</key>
 		<data>
-		uws57xKqIOmI04Ryg+z2PAXuC3M=
+		lB83ux3doUjJx7teNe8BaEAL7S0=
 		</data>
 		<key>Headers/AVUser+SNS.h</key>
 		<data>
-		JtO8hHZbPK8gvwQPYDwMpkLD6sg=
+		JmKs+SsAB+n8Bzg0RhKIHb1Hvgs=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -21,11 +21,11 @@
 	<dict>
 		<key>Headers/AVOSCloudSNS.h</key>
 		<data>
-		uws57xKqIOmI04Ryg+z2PAXuC3M=
+		lB83ux3doUjJx7teNe8BaEAL7S0=
 		</data>
 		<key>Headers/AVUser+SNS.h</key>
 		<data>
-		JtO8hHZbPK8gvwQPYDwMpkLD6sg=
+		JmKs+SsAB+n8Bzg0RhKIHb1Hvgs=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -36,14 +36,14 @@
 	<dict>
 		<key>.*</key>
 		<true/>
-		<key>Info.plist</key>
+		<key>^Info.plist$</key>
 		<dict>
 			<key>omit</key>
 			<true/>
 			<key>weight</key>
 			<real>10</real>
 		</dict>
-		<key>ResourceRules.plist</key>
+		<key>^ResourceRules.plist$</key>
 		<dict>
 			<key>omit</key>
 			<true/>
@@ -55,33 +55,26 @@
 	<dict>
 		<key>.*</key>
 		<true/>
-		<key>Info.plist</key>
-		<dict>
-			<key>omit</key>
-			<true/>
-			<key>weight</key>
-			<real>10</real>
-		</dict>
-		<key>ResourceRules.plist</key>
-		<dict>
-			<key>omit</key>
-			<true/>
-			<key>weight</key>
-			<real>100</real>
-		</dict>
-		<key>^(Frameworks|SharedFrameworks|Plugins|Plug-ins|XPCServices|Helpers|MacOS)/</key>
+		<key>^(Frameworks|SharedFrameworks|PlugIns|Plug-ins|XPCServices|Helpers|MacOS|Library/(Automator|Spotlight|LoginItems))/</key>
 		<dict>
 			<key>nested</key>
 			<true/>
 			<key>weight</key>
 			<real>0.0</real>
 		</dict>
-		<key>^[^/]+$</key>
+		<key>^Info.plist$</key>
 		<dict>
-			<key>top</key>
+			<key>omit</key>
 			<true/>
 			<key>weight</key>
-			<real>0.0</real>
+			<real>10</real>
+		</dict>
+		<key>^ResourceRules.plist$</key>
+		<dict>
+			<key>omit</key>
+			<true/>
+			<key>weight</key>
+			<real>100</real>
 		</dict>
 	</dict>
 </dict>

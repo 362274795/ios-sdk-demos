@@ -60,13 +60,11 @@ enum : NSUInteger {
 
 - (void)addContactForGroup {
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
-    AVGroup *group = [[CDSessionManager sharedInstance] startNewGroup];
-//    AVSession *session = [[AVSession alloc] init];
-//    session.sessionDelegate = [CDSessionManager sharedInstance];
-//    session.signatureDelegate = [CDSessionManager sharedInstance];
-    controller.type = CDChatRoomTypeGroup;
-    controller.group = group;
-    [self.navigationController pushViewController:controller animated:YES];
+    [[CDSessionManager sharedInstance] startNewGroup:^(AVGroup *group, NSError *error) {
+        controller.type = CDChatRoomTypeGroup;
+        controller.group = group;
+        [self.navigationController pushViewController:controller animated:YES];
+    }];
 }
 
 - (void)addScan {
@@ -79,11 +77,7 @@ enum : NSUInteger {
     [readers addObject:reader];
     
     widController.readers = readers;
-    
-    NSBundle *mainBundle = [NSBundle mainBundle];
-//    widController.soundToPlay =
-//    [NSURL fileURLWithPath:[mainBundle pathForResource:@"beep-beep" ofType:@"aiff"] isDirectory:NO];
-    
+
     [self presentViewController:widController animated:YES completion:^{
         
     }];

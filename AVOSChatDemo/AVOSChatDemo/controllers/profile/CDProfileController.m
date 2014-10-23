@@ -52,7 +52,6 @@
     [button setBackgroundImage:image forState:UIControlStateDisabled];
     [button setTitle:@"退出登录" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    //    button.userInteractionEnabled = YES;
     [button addTarget:self action:@selector(logout:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
 }
@@ -65,8 +64,6 @@
         username = [NSString stringWithFormat:@"%@(%@)", username, [user mobilePhoneNumber]];
     }
     self.nameLabel.text = username;
-//    [[AVUser currentUser] setMobilePhoneNumber:@"18911209919"];
-//    [[AVUser currentUser] save];
 }
 
 - (void)didReceiveMemoryWarning {

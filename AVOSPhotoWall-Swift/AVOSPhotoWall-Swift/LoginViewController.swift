@@ -94,7 +94,7 @@ class LoginViewController: UIViewController {
             if (user != nil) {
                 //Open the wall
                 var vc:WallPicturesViewController = WallPicturesViewController()
-                self.navigationController.pushViewController(vc, animated: true)
+                self.navigationController!.pushViewController(vc, animated: true)
             } else {
                 //Something bad has ocurred
 //                var userInfo:Dictionary! = error.userInfo as Dictionary!
@@ -107,7 +107,7 @@ class LoginViewController: UIViewController {
     
     func registerPressed(sender:AnyObject) {
         var vc:RegisterViewController = RegisterViewController()
-        self.navigationController.pushViewController(vc, animated: true)
+        self.navigationController!.pushViewController(vc, animated: true)
     }
     
     func keyboardHide(tap:UITapGestureRecognizer) {

@@ -156,17 +156,6 @@
     self.usernameField.text = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_USERNAME];
     [self changeButtonState:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeButtonState:) name:UITextFieldTextDidChangeNotification object:nil];
-    
-//    [AVUser requestMobilePhoneVerify:@"18911209919" withBlock:nil];
-//    [AVUser verifyMobilePhone:@"080710" withBlock:nil];
-//    [AVUser requestLoginSmsCode:@"18911209919" withBlock:nil];
-//    [AVOSCloud requestSmsCodeWithPhoneNumber:@"18911209919" callback:nil];
-//    [AVOSCloud requestSmsCodeWithPhoneNumber:<#(NSString *)#>
-//                                     appName:<#(NSString *)#>
-//                                   operation:<#(NSString *)#>
-//                                  timeToLive:<#(NSUInteger)#>
-//                                    callback:<#^(BOOL succeeded, NSError *error)callback#>]
-//    [AVOSCloud verifySmsCode:@"066225" callback:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -280,7 +269,6 @@
 - (void)keyboardWillShow:(NSNotification *)notification {
     [self performSelector:@selector(moveUpMainView) withObject:nil afterDelay:0.1];
 }
-
 
 - (void)keyboardWillHide:(NSNotification *)notification{
     UIScrollView *scrollView = (UIScrollView *)self.view;
