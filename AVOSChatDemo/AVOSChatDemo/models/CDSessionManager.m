@@ -308,6 +308,19 @@ static BOOL initialized = NO;
     return result;
 }
 
+- (void)getHistoryMessagesForPeerId:(NSString *)peerId callback:(AVArrayResultBlock)callback {
+    AVHistoryMessageQuery *query = [AVHistoryMessageQuery queryWithFirstPeerId:_session.peerId secondPeerId:peerId];
+    [query findInBackgroundWithCallback:^(NSArray *objects, NSError *error) {
+        callback(objects, error);
+    }];
+}
+
+- (void)getHistoryMessagesForGroup:(NSString *)groupId callback:(AVArrayResultBlock)callback {
+    AVHistoryMessageQuery *query = [AVHistoryMessageQuery queryWithGroupId:groupId];
+    [query findInBackgroundWithCallback:^(NSArray *objects, NSError *error) {
+        callback(objects, error);
+    }];
+}
 #pragma mark - AVSessionDelegate
 - (void)sessionOpened:(AVSession *)session {
     NSLog(@"%s", __PRETTY_FUNCTION__);

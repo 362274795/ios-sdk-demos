@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 //! Project version number for AVOSCloudSNS.
 FOUNDATION_EXPORT double AVOSCloudSNSVersionNumber;
 
@@ -25,6 +26,8 @@ typedef NS_ENUM(int, AVOSCloudSNSType){
     AVOSCloudSNSQQ         =2,
     
 } ;
+
+#import "AVUser+SNS.h"
 
 /**
  *  AVOSCloudSNS错误码

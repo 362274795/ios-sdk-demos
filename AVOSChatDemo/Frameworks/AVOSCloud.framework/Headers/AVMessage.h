@@ -17,7 +17,7 @@ typedef enum : NSUInteger {
     AVMessageTypeGroupOut,
 } AVMessageType;
 
-@interface AVMessage : NSObject
+@interface AVMessage : NSObject <NSCopying>
 @property(nonatomic)AVMessageType type;
 @property(nonatomic, strong)NSString *payload;
 @property(nonatomic, strong)NSString *fromPeerId;

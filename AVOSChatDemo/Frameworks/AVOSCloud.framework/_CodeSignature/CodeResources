@@ -44,6 +44,10 @@
 		<data>
 		uDc6YeKY91rp3DYInzN3MvJnKcw=
 		</data>
+		<key>Headers/AVCloudQueryResult.h</key>
+		<data>
+		u2jFl+EhYjfuJPEq38+DbtDxnPg=
+		</data>
 		<key>Headers/AVConstants.h</key>
 		<data>
 		m1X8hmIxLJUuvHK4KY9WVAmySPo=
@@ -58,7 +62,15 @@
 		</data>
 		<key>Headers/AVGroup.h</key>
 		<data>
-		276zDQsV8WA+/5JiopWbjz7gGJk=
+		s81XkuvnnxyzP3d7nSzMY46rV5Q=
+		</data>
+		<key>Headers/AVHistoryMessage.h</key>
+		<data>
+		KM08k2LUaBCWPMlkitni9hKNzws=
+		</data>
+		<key>Headers/AVHistoryMessageQuery.h</key>
+		<data>
+		aKuiE4aUpWOPY7aEaGDFd4bx3Fw=
 		</data>
 		<key>Headers/AVInstallation.h</key>
 		<data>
@@ -70,11 +82,11 @@
 		</data>
 		<key>Headers/AVMessage.h</key>
 		<data>
-		SR23ZlVVKZb51UGXnusQlTrrIDI=
+		5xn+AYB6cuPsvDnKbcQk5g14uv0=
 		</data>
 		<key>Headers/AVOSCloud.h</key>
 		<data>
-		K6b7LNXrvVS4Y7Op4prYTY+Dysc=
+		DII7+qoOuSkBKWfITTurocjmwn0=
 		</data>
 		<key>Headers/AVObject+Subclass.h</key>
 		<data>
@@ -90,7 +102,7 @@
 		</data>
 		<key>Headers/AVQuery.h</key>
 		<data>
-		iu+XdQ6BOxrgZ6G8JJLt10NJLRM=
+		EIhpOsHkUl30MTKsUGtpK/f5Hvs=
 		</data>
 		<key>Headers/AVRelation.h</key>
 		<data>
@@ -182,7 +194,7 @@
 		</data>
 		<key>PrivateHeaders/AVLocationManager.h</key>
 		<data>
-		RPfOJO1TmUb2g1YkCcqd1D83rOA=
+		xeYpCu9g+SG7jB7zG1Qt4ipWIPg=
 		</data>
 		<key>PrivateHeaders/AVNetworkActivityIndicatorManager.h</key>
 		<data>
@@ -247,6 +259,10 @@
 		<data>
 		uDc6YeKY91rp3DYInzN3MvJnKcw=
 		</data>
+		<key>Headers/AVCloudQueryResult.h</key>
+		<data>
+		u2jFl+EhYjfuJPEq38+DbtDxnPg=
+		</data>
 		<key>Headers/AVConstants.h</key>
 		<data>
 		m1X8hmIxLJUuvHK4KY9WVAmySPo=
@@ -261,7 +277,15 @@
 		</data>
 		<key>Headers/AVGroup.h</key>
 		<data>
-		276zDQsV8WA+/5JiopWbjz7gGJk=
+		s81XkuvnnxyzP3d7nSzMY46rV5Q=
+		</data>
+		<key>Headers/AVHistoryMessage.h</key>
+		<data>
+		KM08k2LUaBCWPMlkitni9hKNzws=
+		</data>
+		<key>Headers/AVHistoryMessageQuery.h</key>
+		<data>
+		aKuiE4aUpWOPY7aEaGDFd4bx3Fw=
 		</data>
 		<key>Headers/AVInstallation.h</key>
 		<data>
@@ -273,11 +297,11 @@
 		</data>
 		<key>Headers/AVMessage.h</key>
 		<data>
-		SR23ZlVVKZb51UGXnusQlTrrIDI=
+		5xn+AYB6cuPsvDnKbcQk5g14uv0=
 		</data>
 		<key>Headers/AVOSCloud.h</key>
 		<data>
-		K6b7LNXrvVS4Y7Op4prYTY+Dysc=
+		DII7+qoOuSkBKWfITTurocjmwn0=
 		</data>
 		<key>Headers/AVObject+Subclass.h</key>
 		<data>
@@ -293,7 +317,7 @@
 		</data>
 		<key>Headers/AVQuery.h</key>
 		<data>
-		iu+XdQ6BOxrgZ6G8JJLt10NJLRM=
+		EIhpOsHkUl30MTKsUGtpK/f5Hvs=
 		</data>
 		<key>Headers/AVRelation.h</key>
 		<data>
@@ -385,7 +409,7 @@
 		</data>
 		<key>PrivateHeaders/AVLocationManager.h</key>
 		<data>
-		RPfOJO1TmUb2g1YkCcqd1D83rOA=
+		xeYpCu9g+SG7jB7zG1Qt4ipWIPg=
 		</data>
 		<key>PrivateHeaders/AVNetworkActivityIndicatorManager.h</key>
 		<data>
@@ -431,7 +455,7 @@
 	<dict>
 		<key>.*</key>
 		<true/>
-		<key>^(Frameworks|SharedFrameworks|Plugins|Plug-ins|XPCServices|Helpers|MacOS)/</key>
+		<key>^(Frameworks|SharedFrameworks|PlugIns|Plug-ins|XPCServices|Helpers|MacOS|Library/(Automator|Spotlight|LoginItems))/</key>
 		<dict>
 			<key>nested</key>
 			<true/>
@@ -451,13 +475,6 @@
 			<true/>
 			<key>weight</key>
 			<real>100</real>
-		</dict>
-		<key>^[^/]+$</key>
-		<dict>
-			<key>top</key>
-			<true/>
-			<key>weight</key>
-			<real>0.0</real>
 		</dict>
 	</dict>
 </dict>

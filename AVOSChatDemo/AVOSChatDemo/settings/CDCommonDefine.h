@@ -9,9 +9,18 @@
 #ifndef AVOSChatDemo_CDCommonDefine_h
 #define AVOSChatDemo_CDCommonDefine_h
 
-#error 在这里设置你自己的AppID和AppKey，设置好了删除此行
+#define USE_US 0
+#if !USE_US
+//国内节点
+//#error 在这里设置你自己的AppID和AppKey，设置好了删除此行
 #define AVOSAppID @""
 #define AVOSAppKey @""
+#else
+//北美节点
+//#error 在这里设置你自己的AppID和AppKey，设置好了删除此行
+#define AVOSAppID @""
+#define AVOSAppKey @""
+#endif
 
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1]
 #define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]

@@ -43,10 +43,17 @@ typedef void (^AVGroupResultBlock)(AVGroup *group, NSError *error);
 
 /*!
  *  根据groupId获取一个AVGroup对象
+ *  @param groupId 已经存在的groupId，不能为nil
  *  @param session group依赖的服务器会话
  *  @return 返回group对象
  */
 + (AVGroup *)getGroupWithGroupId:(NSString *)groupId session:(AVSession *)session;
+
+/*!
+ *  当生成一个AVGroup对象时默认使用此delegate，主要用于构建非主动创建的AVGroup对象，如被邀请加入某个Group
+ *  @param delegate 默认的delegate
+ */
++ (void)setDefaultDelegate:(id<AVGroupDelegate>)delegate;
 
 /*!
  *  加入group
