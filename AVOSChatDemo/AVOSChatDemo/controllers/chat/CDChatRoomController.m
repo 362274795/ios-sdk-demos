@@ -324,12 +324,20 @@
     switch (buttonIndex) {
         case 0:
         {
-            UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-            imagePickerController.delegate = self;
-            imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-            [self presentViewController:imagePickerController animated:YES completion:^{
+            @try {
+                UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+                imagePickerController.delegate = self;
+                imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+                [self presentViewController:imagePickerController animated:YES completion:^{
+                    
+                }];
+            }
+            @catch (NSException *exception) {
                 
-            }];
+            }
+            @finally {
+                
+            }
         }
             break;
         case 1:

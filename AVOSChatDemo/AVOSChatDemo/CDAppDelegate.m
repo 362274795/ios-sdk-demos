@@ -20,17 +20,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [AVLogger setLoggerLevelMask:AVLoggerLevelAll];
-    [AVLogger addLoggerDomain:AVLoggerDomainIM];
-    [AVLogger addLoggerDomain:AVLoggerDomainCURL];
 #if USE_US
     [AVOSCloud useAVCloudUS];
 #endif
     [AVOSCloud setApplicationId:AVOSAppID
                       clientKey:AVOSAppKey];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-        [AVAnalytics setCrashReportEnabled:NO];
-//    });
     //统计应用启动情况
     [AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
@@ -94,15 +88,6 @@
     //推送功能打开时, 注册当前的设备, 同时记录用户活跃, 方便进行有针对的推送
     AVInstallation *currentInstallation = [AVInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
-    
-    //可选 但是很重要. 我们可以在任何地方给currentInstallation设置任意值,方便进行有针对的推送
-    //比如如果我们知道用户的年龄了,可以加上下面这一行 这样推送时我们可以选择age>20岁的用户进行通知
-    //[currentInstallation setObject:@"28" forKey:@"age"];
-    
-    //我们当然也可以设置根据地理位置提醒 发挥想象力吧!
-    
-    
-    //当然别忘了任何currentInstallation的变更后做保存
     [currentInstallation saveInBackground];
 }
 

@@ -198,12 +198,14 @@ enum : NSUInteger {
         }
         
     }];
+    // [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
     [self dismissViewControllerAnimated:NO completion:^{
         
     }];
+    // [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)sessionUpdated:(NSNotification *)notification {

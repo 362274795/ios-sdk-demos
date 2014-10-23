@@ -30,6 +30,7 @@
 #import "AVSession.h"
 #import "AVSignature.h"
 #import "AVLogger.h"
+#import "AVHistoryMessageQuery.h"
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #import "AVAnalytics.h"
@@ -191,6 +192,20 @@ typedef enum AVLogLevel : NSUInteger {
                              appName:(NSString *)appName
                            operation:(NSString *)operation
                           timeToLive:(NSUInteger)ttl
+                            callback:(AVBooleanResultBlock)callback;
+
+/*!
+ *  请求短信验证码，需要开启手机短信验证 API 选项。
+ *  发送短信到指定的手机上，获取6位数字验证码。
+ *  @param phoneNumber 11位电话号码
+ *  @param appName 应用名称，传nil为默认值您的应用名称
+ *  @param operation 操作名称，传nil为默认值"短信认证"
+ *  @param ttl 短信过期时间，单位分钟，传0为默认值10分钟
+ *  @param callback 回调结果
+ */
++(void)requestSmsCodeWithPhoneNumber:(NSString *)phoneNumber
+                        templateName:(NSString *)templateName
+                           variables:(NSDictionary *)variables
                             callback:(AVBooleanResultBlock)callback;
 
 /*!
