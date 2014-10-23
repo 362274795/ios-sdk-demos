@@ -23,7 +23,9 @@
     [AVLogger setLoggerLevelMask:AVLoggerLevelAll];
     [AVLogger addLoggerDomain:AVLoggerDomainIM];
     [AVLogger addLoggerDomain:AVLoggerDomainCURL];
-    
+#if USE_US
+    [AVOSCloud useAVCloudUS];
+#endif
     [AVOSCloud setApplicationId:AVOSAppID
                       clientKey:AVOSAppKey];
 //    dispatch_async(dispatch_get_main_queue(), ^{
