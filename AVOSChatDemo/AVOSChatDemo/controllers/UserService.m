@@ -19,4 +19,14 @@
     q.cachePolicy=kAVCachePolicyNetworkElseCache;
     [q findObjectsInBackgroundWithBlock:block];
 }
+
+// should exclude friends
++(void)findUsers:(NSString *)partName withBlock:(AVArrayResultBlock)block{
+    AVQuery *q=[User query];
+    [q setCachePolicy:kAVCachePolicyNetworkElseCache];
+    [q whereKey:@"username" containsString:partName];
+    User *curUser=[User currentUser];
+    [q whereKey:@"objectId" notEqualTo:curUser.objectId];
+    [q findObjectsInBackgroundWithBlock:block];
+}
 @end

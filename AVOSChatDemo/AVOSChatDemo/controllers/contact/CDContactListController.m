@@ -11,6 +11,7 @@
 #import "CDContactDetailController.h"
 #import "UserService.h"
 #import "CDAddFriendController.h"
+#import "CDBaseNavigationController.h"
 
 enum : NSUInteger {
     kTagNameLabel = 10000,
@@ -36,8 +37,8 @@ enum : NSUInteger {
 }
 
 -(void)goAddFriend:(UIBarButtonItem*)buttonItem{
-    CDAddFriendController *controller=[[CDAddFriendController alloc] init];
-    [self.navigationController pushViewController:controller animated:YES];
+    CDAddFriendController *controller = [[CDAddFriendController alloc] init];
+    [[self navigationController] pushViewController:controller animated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -12,5 +12,5 @@
 
 @interface UserService : NSObject
 +(void)findFriends:(AVArrayResultBlock)callback;
-
++(void)findUsers:(NSString*)partName withBlock:(AVArrayResultBlock)block;
 @end

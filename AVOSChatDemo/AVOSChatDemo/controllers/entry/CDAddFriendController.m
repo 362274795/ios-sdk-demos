@@ -2,15 +2,19 @@
 //  CDAddFriendController.m
 //  AVOSChatDemo
 //
-//  Created by lzw on 14-10-22.
+//  Created by lzw on 14-10-23.
 //  Copyright (c) 2014年 AVOS. All rights reserved.
 //
 
 #import "CDAddFriendController.h"
-#import "CDTextField.h"
+#import "User.h"
+#import "UserService.h"
+#import "CDBaseNavigationController.h"
+#import "CDUserInfoController.h"
 
-@interface CDAddFriendController ()<UITextFieldDelegate>
-
+@interface CDAddFriendController (){
+    NSArray *users;
+}
 @end
 
 @implementation CDAddFriendController
@@ -27,27 +31,46 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.frame=CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    CGFloat originX=10;
-    CGFloat orginY=10;
-    CGFloat width=self.view.frame.size.width;
-    CGFloat height=self.view.frame.size.height;
-    UIImage *image;
-    int buttonWidth=100;
-    CGFloat textWidth=width-buttonWidth;
-    image=[UIImage imageNamed:@"input_bg_top"];
-    CGFloat textHeight=image.size.height;
-    CDTextField *textField=[[CDTextField alloc] initWithFrame:CGRectMake(originX, orginY, textWidth, textHeight)];
-    textField.background=image;
-    textField.horizontalPadding=10;
-    textField.verticalPadding=10;
-    textField.placeholder=@"请输入用户名";
-    textField.contentVerticalAlignment=UIControlContentHorizontalAlignmentCenter;
-    textField.returnKeyType=UIReturnKeyGo;
-    [self.view addSubview:textField];
-    //textField.delegate=self;
+    [_searchBar setDelegate:self];
+    [_tableView setDelegate:self];
+    [_tableView setDataSource:self];
+    [self searchUser:@""];
+    // Do any additional setup after loading the view from its nib.
+}
 
-    // Do any additional setup after loading the view.
+-(void)searchUser:(NSString *)name{
+    [UserService findUsers:name withBlock:^(NSArray *objects, NSError *error) {
+        if(objects){
+            users=objects;
+            [_tableView reloadData];
+        }
+    }];
+}
+
+-(NSInteger) numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return [users count];
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"tableCell"];
+    if(!cell){
+        cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"tableCell"];
+    }
+    User *user=users[indexPath.row];
+    cell.textLabel.text=user.username;
+    return cell;
+}
+
+-(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    //NSLog(@"select");
+    User *user=users[indexPath.row];
+    CDUserInfoController *controller=[[CDUserInfoController alloc] init];
+    controller.user=user;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,15 +79,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    [searchBar resignFirstResponder];
+    NSString* content=[searchBar text];
+    [self searchUser:content];
 }
-*/
+
 
 @end

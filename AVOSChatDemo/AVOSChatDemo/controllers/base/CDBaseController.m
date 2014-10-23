@@ -15,6 +15,7 @@
 @implementation CDBaseController
 
 - (void)loadView {
+    [super loadView];
     CGRect rect;
     if ([self respondsToSelector:@selector(_defaultInitialViewFrame)]) {
         rect = self._defaultInitialViewFrame;
