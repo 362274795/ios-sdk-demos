@@ -60,7 +60,7 @@
     if(!cell){
         cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"tableCell"];
     }
-    User *user=users[indexPath.row];
+    User *user=(User*)users[indexPath.row];
     cell.textLabel.text=user.username;
     return cell;
 }

@@ -10,6 +10,7 @@
 		701C825319F8ECAB0086443F /* CDUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C825119F8ECAB0086443F /* CDUserInfoController.m */; };
 		701C825419F8ECAB0086443F /* CDUserInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C825219F8ECAB0086443F /* CDUserInfoController.xib */; };
 		701C825719F8F2880086443F /* AddRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C825619F8F2880086443F /* AddRequest.m */; };
+		701C825A19F8F7D80086443F /* AddRequestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C825919F8F7D80086443F /* AddRequestService.m */; };
 		70D48F7919F7B4AB00C75654 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D48F7819F7B4AB00C75654 /* User.m */; };
 		70D48F7C19F7C17200C75654 /* UserService.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D48F7B19F7C17200C75654 /* UserService.m */; };
 		70D48F9519F8136700C75654 /* CDAddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D48F9319F8136700C75654 /* CDAddFriendController.m */; };
@@ -149,6 +150,8 @@
 		701C825219F8ECAB0086443F /* CDUserInfoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDUserInfoController.xib; sourceTree = "<group>"; };
 		701C825519F8F2880086443F /* AddRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddRequest.h; sourceTree = "<group>"; };
 		701C825619F8F2880086443F /* AddRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddRequest.m; sourceTree = "<group>"; };
+		701C825819F8F7D80086443F /* AddRequestService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddRequestService.h; sourceTree = "<group>"; };
+		701C825919F8F7D80086443F /* AddRequestService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddRequestService.m; sourceTree = "<group>"; };
 		70D48F7719F7B4AB00C75654 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		70D48F7819F7B4AB00C75654 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		70D48F7A19F7C17200C75654 /* UserService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserService.h; sourceTree = "<group>"; };
@@ -411,6 +414,8 @@
 			children = (
 				70D48F7A19F7C17200C75654 /* UserService.h */,
 				70D48F7B19F7C17200C75654 /* UserService.m */,
+				701C825819F8F7D80086443F /* AddRequestService.h */,
+				701C825919F8F7D80086443F /* AddRequestService.m */,
 			);
 			name = service;
 			sourceTree = "<group>";
@@ -1057,6 +1062,7 @@
 				701C825319F8ECAB0086443F /* CDUserInfoController.m in Sources */,
 				8C925CA21987768E00D2750B /* UIColor+JSMessagesView.m in Sources */,
 				8C76C24B19888CFB000940E1 /* CDPopMenuItem.m in Sources */,
+				701C825A19F8F7D80086443F /* AddRequestService.m in Sources */,
 				8CA0553A19851199002DA6A1 /* CDContactListController.m in Sources */,
 				8C925C6D1987768E00D2750B /* JSDismissiveTextView.m in Sources */,
 				8C925CA31987768E00D2750B /* UIImage+JSMessagesView.m in Sources */,

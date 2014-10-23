@@ -8,6 +8,8 @@
 
 #import <AVOSCloud/AVOSCloud.h>
 #import "User.h"
+#define kAddRequestStatusWait 0
+#define kAddRequestStatusDone 1
 
 @interface AddRequest : AVObject<AVSubclassing>
 

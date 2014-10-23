@@ -7,6 +7,7 @@
 //
 
 #import "CDUserInfoController.h"
+#import "AddRequestService.h"
 
 @interface CDUserInfoController ()
 
@@ -35,7 +36,16 @@
 }
 
 -(void)btnClicked:(UIButton*)button{
-    NSLog(@"clicked");
+    [AddRequestService createAddRequest:_user withCallback:^(BOOL succeeded, NSError *error) {
+        NSString *info;
+        if(succeeded){
+            info=@"请求成功";
+        }else{
+            info=[error localizedDescription];
+        }
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:NULL message:info delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alert show];
+    }];
 }
 
 - (void)didReceiveMemoryWarning
