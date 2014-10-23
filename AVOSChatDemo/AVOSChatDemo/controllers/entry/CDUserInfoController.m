@@ -30,7 +30,12 @@
 {
     [super viewDidLoad];
     _nameLabel.text=_user.username;
+    [_actionBtn addTarget:self action:@selector(btnClicked:) forControlEvents:UIControlEventTouchUpInside];
     // Do any additional setup after loading the view from its nib.
+}
+
+-(void)btnClicked:(UIButton*)button{
+    NSLog(@"clicked");
 }
 
 - (void)didReceiveMemoryWarning

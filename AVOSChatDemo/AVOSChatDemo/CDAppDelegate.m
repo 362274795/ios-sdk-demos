@@ -21,6 +21,7 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
+    [AddRequest registerSubclass];
     [AVOSCloud setApplicationId:AVOSAppID
                       clientKey:AVOSAppKey];
     //统计应用启动情况

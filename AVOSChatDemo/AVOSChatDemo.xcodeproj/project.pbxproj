@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		701C825319F8ECAB0086443F /* CDUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C825119F8ECAB0086443F /* CDUserInfoController.m */; };
 		701C825419F8ECAB0086443F /* CDUserInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C825219F8ECAB0086443F /* CDUserInfoController.xib */; };
+		701C825719F8F2880086443F /* AddRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C825619F8F2880086443F /* AddRequest.m */; };
 		70D48F7919F7B4AB00C75654 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D48F7819F7B4AB00C75654 /* User.m */; };
 		70D48F7C19F7C17200C75654 /* UserService.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D48F7B19F7C17200C75654 /* UserService.m */; };
 		70D48F9519F8136700C75654 /* CDAddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70D48F9319F8136700C75654 /* CDAddFriendController.m */; };
@@ -146,6 +147,8 @@
 		701C825019F8ECAB0086443F /* CDUserInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDUserInfoController.h; sourceTree = "<group>"; };
 		701C825119F8ECAB0086443F /* CDUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDUserInfoController.m; sourceTree = "<group>"; };
 		701C825219F8ECAB0086443F /* CDUserInfoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDUserInfoController.xib; sourceTree = "<group>"; };
+		701C825519F8F2880086443F /* AddRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddRequest.h; sourceTree = "<group>"; };
+		701C825619F8F2880086443F /* AddRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddRequest.m; sourceTree = "<group>"; };
 		70D48F7719F7B4AB00C75654 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		70D48F7819F7B4AB00C75654 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		70D48F7A19F7C17200C75654 /* UserService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserService.h; sourceTree = "<group>"; };
@@ -417,6 +420,8 @@
 			children = (
 				70D48F7719F7B4AB00C75654 /* User.h */,
 				70D48F7819F7B4AB00C75654 /* User.m */,
+				701C825519F8F2880086443F /* AddRequest.h */,
+				701C825619F8F2880086443F /* AddRequest.m */,
 			);
 			name = avobject;
 			sourceTree = "<group>";
@@ -1029,6 +1034,7 @@
 				8CF21DD7197FCCC1002B9220 /* main.m in Sources */,
 				8C925C1C19873F4200D2750B /* CDSessionManager.m in Sources */,
 				8C925CB51987991000D2750B /* FMResultSet.m in Sources */,
+				701C825719F8F2880086443F /* AddRequest.m in Sources */,
 				70D48F7919F7B4AB00C75654 /* User.m in Sources */,
 				8CACCFE21986676100E9DE40 /* CDChatRoomController.m in Sources */,
 				8C925CB31987991000D2750B /* FMDatabasePool.m in Sources */,

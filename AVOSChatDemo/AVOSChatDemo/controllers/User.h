@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 AVOS. All rights reserved.
 //
 
-#import "CDCommon.h"
+#import <AVOSCloud/AVOSCloud.h>
 
 @interface User : AVUser<AVSubclassing>
 
