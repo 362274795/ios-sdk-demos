@@ -15,8 +15,7 @@
     [self haveAddRequest:curUser toUser:toUser callback:^(BOOL had, NSError *error) {
         if(error==NULL){
             if(had){
-                NSMutableDictionary *details=[NSMutableDictionary dictionary];
-                [details setValue:@"已经发出过请求了" forKey:NSLocalizedDescriptionKey];
+                NSDictionary *details=@{NSLocalizedDescriptionKey:@"已经发出过请求了"};
                 callback(false,[NSError errorWithDomain:@"world" code:0 userInfo:details]);
             }else{
                 AddRequest* addRequest=[[AddRequest alloc] init];
@@ -48,5 +47,12 @@
         }
     }];
 }
-@end
 
++(void)findAddRequests:(AVArrayResultBlock)callback{
+    User* curUser=[User currentUser];
+    AVQuery *q=[AddRequest query];
+    [q includeKey:@"fromUser"];
+    [q whereKey:@"toUser" equalTo:curUser];
+    [q findObjectsInBackgroundWithBlock:callback];
+}
+@end

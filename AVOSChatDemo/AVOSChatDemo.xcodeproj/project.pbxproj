@@ -15,6 +15,13 @@
 		701C826E19F92CD00086443F /* CDAddFriendController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C826919F92CD00086443F /* CDAddFriendController.xib */; };
 		701C826F19F92CD00086443F /* CDUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C826B19F92CD00086443F /* CDUserInfoController.m */; };
 		701C827019F92CD00086443F /* CDUserInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C826C19F92CD00086443F /* CDUserInfoController.xib */; };
+		701C827419F932F50086443F /* CDContactListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C827319F932F50086443F /* CDContactListController.xib */; };
+		701C827D19F9359A0086443F /* CDNewFriendTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C827B19F9359A0086443F /* CDNewFriendTableViewController.m */; };
+		701C827E19F9359A0086443F /* CDNewFriendTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C827C19F9359A0086443F /* CDNewFriendTableViewController.xib */; };
+		701C828719F957100086443F /* CDNewFriendTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C828519F957100086443F /* CDNewFriendTableCell.m */; };
+		701C828819F957100086443F /* CDNewFriendTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C828619F957100086443F /* CDNewFriendTableCell.xib */; };
+		701C828B19F9623A0086443F /* CloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C828A19F9623A0086443F /* CloudService.m */; };
+		701C829119F96D850086443F /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C829019F96D850086443F /* Utils.m */; };
 		8C05A0521981FEE4008B4CC6 /* CDChatListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C05A0511981FEE4008B4CC6 /* CDChatListController.m */; };
 		8C470C5C199257E3006A4E87 /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C470C5B199257E3006A4E87 /* libZXingWidget.a */; };
 		8C470C9D19926019006A4E87 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C470C9C19926019006A4E87 /* libiconv.dylib */; };
@@ -166,12 +173,23 @@
 		701C826019F92CA60086443F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = ../User.m; sourceTree = "<group>"; };
 		701C826119F92CA60086443F /* UserService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserService.h; path = ../UserService.h; sourceTree = "<group>"; };
 		701C826219F92CA60086443F /* UserService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserService.m; path = ../UserService.m; sourceTree = "<group>"; };
-		701C826719F92CD00086443F /* CDAddFriendController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAddFriendController.h; sourceTree = "<group>"; };
-		701C826819F92CD00086443F /* CDAddFriendController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDAddFriendController.m; sourceTree = "<group>"; };
-		701C826919F92CD00086443F /* CDAddFriendController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDAddFriendController.xib; sourceTree = "<group>"; };
-		701C826A19F92CD00086443F /* CDUserInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDUserInfoController.h; sourceTree = "<group>"; };
-		701C826B19F92CD00086443F /* CDUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDUserInfoController.m; sourceTree = "<group>"; };
-		701C826C19F92CD00086443F /* CDUserInfoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDUserInfoController.xib; sourceTree = "<group>"; };
+		701C826719F92CD00086443F /* CDAddFriendController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDAddFriendController.h; path = ../entry/CDAddFriendController.h; sourceTree = "<group>"; };
+		701C826819F92CD00086443F /* CDAddFriendController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDAddFriendController.m; path = ../entry/CDAddFriendController.m; sourceTree = "<group>"; };
+		701C826919F92CD00086443F /* CDAddFriendController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CDAddFriendController.xib; path = ../entry/CDAddFriendController.xib; sourceTree = "<group>"; };
+		701C826A19F92CD00086443F /* CDUserInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDUserInfoController.h; path = ../entry/CDUserInfoController.h; sourceTree = "<group>"; };
+		701C826B19F92CD00086443F /* CDUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDUserInfoController.m; path = ../entry/CDUserInfoController.m; sourceTree = "<group>"; };
+		701C826C19F92CD00086443F /* CDUserInfoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CDUserInfoController.xib; path = ../entry/CDUserInfoController.xib; sourceTree = "<group>"; };
+		701C827319F932F50086443F /* CDContactListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDContactListController.xib; sourceTree = "<group>"; };
+		701C827A19F9359A0086443F /* CDNewFriendTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDNewFriendTableViewController.h; path = ../entry/CDNewFriendTableViewController.h; sourceTree = "<group>"; };
+		701C827B19F9359A0086443F /* CDNewFriendTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDNewFriendTableViewController.m; path = ../entry/CDNewFriendTableViewController.m; sourceTree = "<group>"; };
+		701C827C19F9359A0086443F /* CDNewFriendTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CDNewFriendTableViewController.xib; path = ../entry/CDNewFriendTableViewController.xib; sourceTree = "<group>"; };
+		701C828419F957100086443F /* CDNewFriendTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDNewFriendTableCell.h; sourceTree = "<group>"; };
+		701C828519F957100086443F /* CDNewFriendTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDNewFriendTableCell.m; sourceTree = "<group>"; };
+		701C828619F957100086443F /* CDNewFriendTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CDNewFriendTableCell.xib; sourceTree = "<group>"; };
+		701C828919F9623A0086443F /* CloudService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloudService.h; sourceTree = "<group>"; };
+		701C828A19F9623A0086443F /* CloudService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudService.m; sourceTree = "<group>"; };
+		701C828F19F96D850086443F /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		701C829019F96D850086443F /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		8C05A0501981FEE4008B4CC6 /* CDChatListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDChatListController.h; sourceTree = "<group>"; };
 		8C05A0511981FEE4008B4CC6 /* CDChatListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDChatListController.m; sourceTree = "<group>"; };
 		8C470C5B199257E3006A4E87 /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libZXingWidget.a; sourceTree = "<group>"; };
@@ -455,7 +473,8 @@
 				701C825F19F92CA60086443F /* User.h */,
 				701C826019F92CA60086443F /* User.m */,
 			);
-			path = avobject;
+			name = avobject;
+			path = controllers/avobject;
 			sourceTree = "<group>";
 		};
 		701C827219F92DD80086443F /* service */ = {
@@ -465,8 +484,13 @@
 				701C825E19F92CA60086443F /* AddRequestService.m */,
 				701C826119F92CA60086443F /* UserService.h */,
 				701C826219F92CA60086443F /* UserService.m */,
+				701C828919F9623A0086443F /* CloudService.h */,
+				701C828A19F9623A0086443F /* CloudService.m */,
+				701C828F19F96D850086443F /* Utils.h */,
+				701C829019F96D850086443F /* Utils.m */,
 			);
-			path = service;
+			name = service;
+			path = controllers/service;
 			sourceTree = "<group>";
 		};
 		8C05A04B1981FEA3008B4CC6 /* chat */ = {
@@ -782,10 +806,17 @@
 		8CA0553319851172002DA6A1 /* contact */ = {
 			isa = PBXGroup;
 			children = (
+				701C826719F92CD00086443F /* CDAddFriendController.h */,
+				701C826819F92CD00086443F /* CDAddFriendController.m */,
+				701C826919F92CD00086443F /* CDAddFriendController.xib */,
+				701C827A19F9359A0086443F /* CDNewFriendTableViewController.h */,
+				701C827B19F9359A0086443F /* CDNewFriendTableViewController.m */,
+				701C827C19F9359A0086443F /* CDNewFriendTableViewController.xib */,
 				8CACCFCB19861F8100E9DE40 /* CDContactDetailController.h */,
 				8CACCFCC19861F8100E9DE40 /* CDContactDetailController.m */,
 				8CA0553819851199002DA6A1 /* CDContactListController.h */,
 				8CA0553919851199002DA6A1 /* CDContactListController.m */,
+				701C827319F932F50086443F /* CDContactListController.xib */,
 			);
 			path = contact;
 			sourceTree = "<group>";
@@ -804,6 +835,9 @@
 		8CACCFD719865BF000E9DE40 /* profile */ = {
 			isa = PBXGroup;
 			children = (
+				701C826A19F92CD00086443F /* CDUserInfoController.h */,
+				701C826B19F92CD00086443F /* CDUserInfoController.m */,
+				701C826C19F92CD00086443F /* CDUserInfoController.xib */,
 				8CACCFDC19865C0C00E9DE40 /* CDProfileController.h */,
 				8CACCFDD19865C0C00E9DE40 /* CDProfileController.m */,
 			);
@@ -813,8 +847,6 @@
 		8CB308181980BABB00BDC34D /* controllers */ = {
 			isa = PBXGroup;
 			children = (
-				701C827219F92DD80086443F /* service */,
-				701C827119F92DB80086443F /* avobject */,
 				8CB3082D1980E67700BDC34D /* base */,
 				8C05A04B1981FEA3008B4CC6 /* chat */,
 				8CA0553319851172002DA6A1 /* contact */,
@@ -842,12 +874,6 @@
 		8CB3083B1980E71400BDC34D /* entry */ = {
 			isa = PBXGroup;
 			children = (
-				701C826719F92CD00086443F /* CDAddFriendController.h */,
-				701C826819F92CD00086443F /* CDAddFriendController.m */,
-				701C826919F92CD00086443F /* CDAddFriendController.xib */,
-				701C826A19F92CD00086443F /* CDUserInfoController.h */,
-				701C826B19F92CD00086443F /* CDUserInfoController.m */,
-				701C826C19F92CD00086443F /* CDUserInfoController.xib */,
 				8CB3083C1980E73900BDC34D /* CDLoginController.h */,
 				8CB3083D1980E73900BDC34D /* CDLoginController.m */,
 				8CB3086519810F0B00BDC34D /* CDRegisterController.h */,
@@ -881,6 +907,9 @@
 				8C76C254198890D0000940E1 /* CDPopMenuItemCell.m */,
 				8CB308451980EAE200BDC34D /* CDTextField.h */,
 				8CB308461980EAE200BDC34D /* CDTextField.m */,
+				701C828419F957100086443F /* CDNewFriendTableCell.h */,
+				701C828519F957100086443F /* CDNewFriendTableCell.m */,
+				701C828619F957100086443F /* CDNewFriendTableCell.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -956,6 +985,8 @@
 			children = (
 				8CF21DD9197FCCC1002B9220 /* CDAppDelegate.h */,
 				8CF21DDA197FCCC1002B9220 /* CDAppDelegate.m */,
+				701C827219F92DD80086443F /* service */,
+				701C827119F92DB80086443F /* avobject */,
 				8CB308181980BABB00BDC34D /* controllers */,
 				8CF21DDC197FCCC1002B9220 /* Images.xcassets */,
 				8C925C1519873F0B00D2750B /* models */,
@@ -1044,9 +1075,11 @@
 				8CB3086419810B3600BDC34D /* background@2x.png in Resources */,
 				701C826E19F92CD00086443F /* CDAddFriendController.xib in Resources */,
 				8C925C7D1987768E00D2750B /* bubble-default-outgoing.png in Resources */,
+				701C828819F957100086443F /* CDNewFriendTableCell.xib in Resources */,
 				8CB308601981007F00BDC34D /* bottom_bar_selected@2x.png in Resources */,
 				8CB3086E198111FC00BDC34D /* ok_selected@2x.png in Resources */,
 				8C925C961987768E00D2750B /* input-bar@2x.png in Resources */,
+				701C827E19F9359A0086443F /* CDNewFriendTableViewController.xib in Resources */,
 				8CB3084F1980F69F00BDC34D /* login_disabled@2x.png in Resources */,
 				8CB308421980E9FD00BDC34D /* input_bg_top@2x.png in Resources */,
 				8CB308611981007F00BDC34D /* bottom_bar_separator@2x.png in Resources */,
@@ -1090,6 +1123,7 @@
 				8C925C8C1987768E00D2750B /* bubble-square-incoming@2x.png in Resources */,
 				8CF21DD5197FCCC1002B9220 /* InfoPlist.strings in Resources */,
 				8C925C8A1987768E00D2750B /* bubble-square-incoming-selected@2x.png in Resources */,
+				701C827419F932F50086443F /* CDContactListController.xib in Resources */,
 				8C925C7B1987768E00D2750B /* bubble-default-outgoing-selected.png in Resources */,
 				8C925C7A1987768E00D2750B /* bubble-default-outgoing-green@2x.png in Resources */,
 				8CB308501980F69F00BDC34D /* login_selected@2x.png in Resources */,
@@ -1125,6 +1159,7 @@
 				701C826519F92CA60086443F /* User.m in Sources */,
 				8CB3083E1980E73900BDC34D /* CDLoginController.m in Sources */,
 				8C78145619CABA2600A6AFB3 /* QBImagePickerGroupCell.m in Sources */,
+				701C828B19F9623A0086443F /* CloudService.m in Sources */,
 				8C925C6E1987768E00D2750B /* JSMessageInputView.m in Sources */,
 				8C925CB11987991000D2750B /* FMDatabase.m in Sources */,
 				701C826F19F92CD00086443F /* CDUserInfoController.m in Sources */,
@@ -1132,6 +1167,7 @@
 				8CF21DD7197FCCC1002B9220 /* main.m in Sources */,
 				8C925C1C19873F4200D2750B /* CDSessionManager.m in Sources */,
 				8C925CB51987991000D2750B /* FMResultSet.m in Sources */,
+				701C827D19F9359A0086443F /* CDNewFriendTableViewController.m in Sources */,
 				8C78145219CABA2600A6AFB3 /* QBAssetsCollectionViewCell.m in Sources */,
 				8CACCFE21986676100E9DE40 /* CDChatRoomController.m in Sources */,
 				8C925CB31987991000D2750B /* FMDatabasePool.m in Sources */,
@@ -1146,6 +1182,7 @@
 				8CB308381980E67700BDC34D /* CDBaseTabBarController.m in Sources */,
 				8C78145119CABA2600A6AFB3 /* QBAssetsCollectionVideoIndicatorView.m in Sources */,
 				8CB308371980E67700BDC34D /* CDBaseNavigationController.m in Sources */,
+				701C829119F96D850086443F /* Utils.m in Sources */,
 				8C76C25219888DD5000940E1 /* CDPopMenu.m in Sources */,
 				8CACCFCD19861F8100E9DE40 /* CDContactDetailController.m in Sources */,
 				8C05A0521981FEE4008B4CC6 /* CDChatListController.m in Sources */,
@@ -1164,6 +1201,7 @@
 				8C925CB21987991000D2750B /* FMDatabaseAdditions.m in Sources */,
 				8C78144F19CABA2600A6AFB3 /* QBAssetsCollectionFooterView.m in Sources */,
 				8C470CB01992625B006A4E87 /* QR_Encode.cpp in Sources */,
+				701C828719F957100086443F /* CDNewFriendTableCell.m in Sources */,
 				8C78145719CABA2600A6AFB3 /* QBImagePickerThumbnailView.m in Sources */,
 				8C925C701987768E00D2750B /* JSMessagesViewController.m in Sources */,
 				8C925C6B1987768E00D2750B /* JSBubbleMessageCell.m in Sources */,

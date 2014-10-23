@@ -11,5 +11,9 @@
 #import "AddRequest.h"
 
 @interface AddRequestService : NSObject
+
 +(void)createAddRequest:(User*)toUser withCallback:(AVBooleanResultBlock)callback;
+
++(void)findAddRequests:(AVArrayResultBlock)callback;
+
 @end

@@ -74,8 +74,8 @@
 #pragma mark - Actions
 
 -(void)logout:(id)sender {
-    [AVUser logOut];
     [[CDSessionManager sharedInstance] clearData];
+    [AVUser logOut];
     CDAppDelegate *delegate = (CDAppDelegate *)[UIApplication sharedApplication].delegate;
     [delegate toLogin];
 }

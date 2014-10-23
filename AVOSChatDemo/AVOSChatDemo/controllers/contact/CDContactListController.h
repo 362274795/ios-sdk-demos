@@ -8,6 +8,6 @@
 
 #import "CDBaseTableController.h"
 
-@interface CDContactListController : CDBaseTableController
+@interface CDContactListController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 
 @end

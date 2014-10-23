@@ -12,11 +12,15 @@
 #import "UserService.h"
 #import "CDAddFriendController.h"
 #import "CDBaseNavigationController.h"
+#import "CDNewFriendTableViewController.h"
 
 enum : NSUInteger {
     kTagNameLabel = 10000,
 };
 @interface CDContactListController ()
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *myNewFriendBtn;
 @property (nonatomic, strong) NSMutableArray *users;
 @end
 
@@ -34,6 +38,14 @@ enum : NSUInteger {
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]
                                             initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
                                             target:self action:@selector(goAddFriend:)];
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    [self.myNewFriendBtn addTarget:self action:@selector(goNewFriend:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)goNewFriend:(UIView*)sender{
+    CDNewFriendTableViewController *controller=[[CDNewFriendTableViewController alloc] init];
+    [[self navigationController] pushViewController:controller animated:YES];
 }
 
 -(void)goAddFriend:(UIBarButtonItem*)buttonItem{
