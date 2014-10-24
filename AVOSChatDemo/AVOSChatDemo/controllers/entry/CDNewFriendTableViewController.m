@@ -98,6 +98,7 @@
                     [Utils alert:[error localizedDescription]];
                 }else{
                     [Utils alert:@"添加成功"];
+                    [self.tableView reloadData];
                 }
             }];
         }

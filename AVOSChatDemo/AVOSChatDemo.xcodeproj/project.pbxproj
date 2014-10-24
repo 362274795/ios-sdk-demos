@@ -1332,11 +1332,13 @@
 					"$(PROJECT_DIR)/$(TARGET_NAME)/third_party/ZXing",
 				);
 				INFOPLIST_FILE = "AVOSChatDemo/AVOSChatDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1360,11 +1362,13 @@
 					"$(PROJECT_DIR)/$(TARGET_NAME)/third_party/ZXing",
 				);
 				INFOPLIST_FILE = "AVOSChatDemo/AVOSChatDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
