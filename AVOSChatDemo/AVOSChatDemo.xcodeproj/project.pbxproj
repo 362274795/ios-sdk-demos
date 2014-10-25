@@ -22,6 +22,7 @@
 		701C828819F957100086443F /* CDNewFriendTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 701C828619F957100086443F /* CDNewFriendTableCell.xib */; };
 		701C828B19F9623A0086443F /* CloudService.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C828A19F9623A0086443F /* CloudService.m */; };
 		701C829119F96D850086443F /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 701C829019F96D850086443F /* Utils.m */; };
+		704A5EB619FBB16A00E643C1 /* Msg.m in Sources */ = {isa = PBXBuildFile; fileRef = 704A5EB519FBB16A00E643C1 /* Msg.m */; };
 		8C05A0521981FEE4008B4CC6 /* CDChatListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C05A0511981FEE4008B4CC6 /* CDChatListController.m */; };
 		8C470C5C199257E3006A4E87 /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C470C5B199257E3006A4E87 /* libZXingWidget.a */; };
 		8C470C9D19926019006A4E87 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C470C9C19926019006A4E87 /* libiconv.dylib */; };
@@ -190,6 +191,8 @@
 		701C828A19F9623A0086443F /* CloudService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloudService.m; sourceTree = "<group>"; };
 		701C828F19F96D850086443F /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		701C829019F96D850086443F /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		704A5EB419FBB16A00E643C1 /* Msg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Msg.h; sourceTree = "<group>"; };
+		704A5EB519FBB16A00E643C1 /* Msg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Msg.m; sourceTree = "<group>"; };
 		8C05A0501981FEE4008B4CC6 /* CDChatListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDChatListController.h; sourceTree = "<group>"; };
 		8C05A0511981FEE4008B4CC6 /* CDChatListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDChatListController.m; sourceTree = "<group>"; };
 		8C470C5B199257E3006A4E87 /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libZXingWidget.a; sourceTree = "<group>"; };
@@ -666,6 +669,8 @@
 			children = (
 				8C925C1A19873F4200D2750B /* CDSessionManager.h */,
 				8C925C1B19873F4200D2750B /* CDSessionManager.m */,
+				704A5EB419FBB16A00E643C1 /* Msg.h */,
+				704A5EB519FBB16A00E643C1 /* Msg.m */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -1201,6 +1206,7 @@
 				8C925CB21987991000D2750B /* FMDatabaseAdditions.m in Sources */,
 				8C78144F19CABA2600A6AFB3 /* QBAssetsCollectionFooterView.m in Sources */,
 				8C470CB01992625B006A4E87 /* QR_Encode.cpp in Sources */,
+				704A5EB619FBB16A00E643C1 /* Msg.m in Sources */,
 				701C828719F957100086443F /* CDNewFriendTableCell.m in Sources */,
 				8C78145719CABA2600A6AFB3 /* QBImagePickerThumbnailView.m in Sources */,
 				8C925C701987768E00D2750B /* JSMessagesViewController.m in Sources */,

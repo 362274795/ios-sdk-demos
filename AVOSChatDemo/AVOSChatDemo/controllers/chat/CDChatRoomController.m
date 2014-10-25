@@ -115,18 +115,18 @@
     [self finishSend];
 }
 
-- (void)sendAttachment:(AVObject *)object {
+- (void)sendAttachment:(AVFile *)object type:(NSString*)type{
     if (self.type == CDChatRoomTypeGroup) {
         if (!self.group.groupId) {
             return;
         }
-        [[CDSessionManager sharedInstance] sendAttachment:object toGroup:self.group.groupId];
+        [[CDSessionManager sharedInstance] sendAttachment:object type:type toGroup:self.group.groupId
+          ];
     } else {
-        [[CDSessionManager sharedInstance] sendAttachment:object toPeerId:self.otherId];
+        [[CDSessionManager sharedInstance] sendAttachment:object type:type toPeerId:self.otherId];
     }
     [self refreshTimestampArray];
     [self finishSend];
-
 }
 
 - (void)cameraPressed:(id)sender{
@@ -280,9 +280,9 @@
     } else {
         NSString *objectId = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"message"];
         NSString *type = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"type"];
-        AVObject *object = [AVObject objectWithoutDataWithClassName:@"Attachments" objectId:objectId];
-        [object fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-            AVFile *file = [object objectForKey:type];
+        AVQuery *query=[AVQuery queryWithClassName:@"_File"];
+        [query getObjectInBackgroundWithId:objectId block:^(AVObject *object, NSError *error) {
+            AVFile* file=[AVFile fileWithURL:[object objectForKey:@"url"]];
             [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
                 [_loadedData setObject:file forKey:r];
                 [self.tableView reloadData];
@@ -382,19 +382,7 @@
     NSUInteger buffered = [representation getBytes:buffer fromOffset:0.0 length:(NSUInteger)representation.size error:nil];
     NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
     if (data) {
-        AVFile *imageFile = [AVFile fileWithName:@"image.png" data:data];
-        [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                AVObject *object = [AVObject objectWithClassName:@"Attachments"];
-                [object setObject:@"image" forKey:@"type"];
-                [object setObject:imageFile forKey:@"image"];
-                [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (succeeded) {
-                        [self sendAttachment:object];
-                    }
-                }];
-            }
-        }];
+        [self sendImage:data];
     }
     [self dismissImagePickerController];
 }
@@ -414,6 +402,15 @@
     [self dismissImagePickerController];
 }
 
+-(void)sendImage:(NSData*)imageData{
+    AVFile *imageFile = [AVFile fileWithName:@"image.png" data:imageData];
+    [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [self sendAttachment:imageFile type:@"image"];
+        }
+    }];
+}
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     if (!image) {
@@ -421,23 +418,9 @@
     }
     if (image) {
         UIImage *scaledImage = [image resizedImageToFitInSize:CGSizeMake(1080, 1920) scaleIfSmaller:NO];
-
         NSData *imageData = UIImageJPEGRepresentation(scaledImage, 0.6);
-        NSLog(@"image size %lu", (unsigned long)[imageData length]);
-        AVFile *imageFile = [AVFile fileWithName:@"image.png" data:imageData];
-        [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (succeeded) {
-                AVObject *object = [AVObject objectWithClassName:@"Attachments"];
-                [object setObject:@"image" forKey:@"type"];
-                [object setObject:imageFile forKey:@"image"];
-                [object saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (succeeded) {
-                        [self sendAttachment:object];
-                    }
-                }];
-            }
-        }];
+        [self sendImage:imageData];
     }
-    [self dismissImagePickerController];
+   [self dismissImagePickerController];
 }
 @end

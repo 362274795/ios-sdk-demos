@@ -118,11 +118,8 @@ static BOOL initialized = NO;
 }
 
 -(void)addSessionToChatRoomsAndDataBase:(CDChatRoomType)type targetId:(NSString*)targetId{
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:[NSNumber numberWithInteger:type] forKey:@"type"];
-    [dict setObject:targetId forKey:@"otherid"];
+    NSDictionary *dict=[self insertSession:type otherId:targetId];
     [_chatRooms addObject:dict];
-    [_database executeUpdate:@"insert into sessions (type, otherid) values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:type], targetId]];
 }
 
 -(BOOL)existsInChatRooms:(CDChatRoomType)targetType targetId:(NSString*)targetId{
@@ -194,8 +191,7 @@ static BOOL initialized = NO;
 }
 
 
-- (void)sendAttachment:(AVObject *)object toPeerId:(NSString *)peerId {
-    NSString *type = [object objectForKey:@"type"];
+- (void)sendAttachment:(AVFile *)object type:(NSString*)type toPeerId:(NSString *)peerId {
 //    AVFile *file = [object objectForKey:type];
     
     NSDictionary *dict=[self createMsgDict:_session.peerId type:type message:object.objectId];
@@ -237,8 +233,7 @@ static BOOL initialized = NO;
     return dict;
 }
 
-- (void)sendAttachment:(AVObject *)object toGroup:(NSString *)groupId {
-    NSString *type = [object objectForKey:@"type"];
+- (void)sendAttachment:(AVFile *)object type:(NSString*)type toGroup:(NSString *)groupId {
     NSDictionary *dict=[self createMsgDict:_session.peerId type:type message:object.objectId];
     
     NSError *error = nil;
@@ -254,7 +249,7 @@ static BOOL initialized = NO;
 
 - (NSArray *)getMessagesForPeerId:(NSString *)peerId {
     NSString *selfId = _session.peerId;
-    FMResultSet *rs = [_database executeQuery:@"select fromid, toid, type, message, object, time from messages where (fromid=? and toid=?) or (fromid=? and toid=?)" withArgumentsInArray:@[selfId, peerId, peerId, selfId]];
+    FMResultSet *rs = [_database executeQuery:@"select fromid, toid, type, message, time from messages where (fromid=? and toid=?) or (fromid=? and toid=?)" withArgumentsInArray:@[selfId, peerId, peerId, selfId]];
     return [self getMessagesByResultSet:rs];
 }
 
@@ -274,7 +269,7 @@ static BOOL initialized = NO;
 }
 
 - (NSArray *)getMessagesForGroup:(NSString *)groupId {
-    FMResultSet *rs = [_database executeQuery:@"select fromid, toid, type, message, object, time from messages where toid=?" withArgumentsInArray:@[groupId]];
+    FMResultSet *rs = [_database executeQuery:@"select fromid, toid, type, message,  time from messages where toid=?" withArgumentsInArray:@[groupId]];
     return [self getMessagesByResultSet:rs];
 }
 
@@ -318,15 +313,7 @@ static BOOL initialized = NO;
     NSString *msg = [jsonDict objectForKey:@"message"];
     NSDictionary *dict=[self insertMessageToDB:message.fromPeerId toId:session.peerId type:type timestamp:@(message.timestamp/1000) message:msg];
     
-    BOOL exist = NO;
-    for (NSDictionary *dict in _chatRooms) {
-        CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
-        NSString *otherid = [dict objectForKey:@"otherid"];
-        if (type == CDChatRoomTypeSingle && [message.fromPeerId isEqualToString:otherid]) {
-            exist = YES;
-            break;
-        }
-    }
+    BOOL exist = [self existsInChatRooms:CDChatRoomTypeSingle targetId:message.fromPeerId];
     if (!exist) {
         [self addChatWithPeerId:message.fromPeerId];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:session userInfo:nil];
@@ -401,15 +388,7 @@ static BOOL initialized = NO;
     NSString *msg = [jsonDict objectForKey:@"message"];
     NSDictionary *dict=[self insertMessageToDB:message.fromPeerId toId:group.groupId type:type timestamp:@(message.timestamp/1000) message:msg];
     
-    BOOL exist = NO;
-    for (NSDictionary *dict in _chatRooms) {
-        CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
-        NSString *otherid = [dict objectForKey:@"otherid"];
-        if (type == CDChatRoomTypeGroup && [group.groupId isEqualToString:otherid]) {
-            exist = YES;
-            break;
-        }
-    }
+    BOOL exist = [self existsInChatRooms:CDChatRoomTypeGroup targetId:group.groupId];
     if (!exist) {
         [self joinGroup:group.groupId];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
@@ -418,25 +397,22 @@ static BOOL initialized = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:group.session userInfo:dict];
 }
 
+-(NSDictionary*)insertSession:(CDChatRoomType)roomType otherId:(NSString*)otherId{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:[NSNumber numberWithInteger:roomType] forKey:@"type"];
+    [dict setObject:otherId forKey:@"otherid"];
+    [_chatRooms addObject:dict];
+    [_database executeUpdate:@"insert into sessions (type, otherid) values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:roomType], otherId]];
+    return dict;
+}
+
 - (void)group:(AVGroup *)group didReceiveEvent:(AVGroupEvent)event peerIds:(NSArray *)peerIds {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     NSLog(@"group:%@ event:%lu peerIds:%@", group.groupId, event, peerIds);
     if (event == AVGroupEventSelfJoined) {
-        BOOL exist = NO;
-        for (NSDictionary *dict in _chatRooms) {
-            CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
-            NSString *otherid = [dict objectForKey:@"otherid"];
-            if (type == CDChatRoomTypeGroup && [group.groupId isEqualToString:otherid]) {
-                exist = YES;
-                break;
-            }
-        }
+        BOOL exist = [self existsInChatRooms:CDChatRoomTypeGroup targetId:group.groupId];
         if (!exist) {
-            NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-            [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeGroup] forKey:@"type"];
-            [dict setObject:group.groupId forKey:@"otherid"];
-            [_chatRooms addObject:dict];
-            [_database executeUpdate:@"insert into sessions (type, otherid) values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeGroup], group.groupId]];
+            [self insertSession:CDChatRoomTypeSingle otherId:group.groupId];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
         }
     }
