@@ -278,7 +278,7 @@
         UIImage *image = [[UIImage alloc] initWithData:data];
         return image;
     } else {
-        NSString *objectId = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"object"];
+        NSString *objectId = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"message"];
         NSString *type = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"type"];
         AVObject *object = [AVObject objectWithoutDataWithClassName:@"Attachments" objectId:objectId];
         [object fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {

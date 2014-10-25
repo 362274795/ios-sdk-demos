@@ -63,16 +63,18 @@ static BOOL initialized = NO;
     return self;
 }
 
+//if type is image ,message is attment.objectId
+
 - (void)commonInit {
     if (![_database tableExists:@"messages"]) {
-        [_database executeUpdate:@"create table \"messages\" (\"fromid\" text, \"toid\" text, \"type\" text, \"message\" text, \"object\" text, \"time\" integer)"];
+        [_database executeUpdate:@"create table messages (fromid text, toid text, type text, message text, time integer)"];
     }
     if (![_database tableExists:@"sessions"]) {
-        [_database executeUpdate:@"create table \"sessions\" (\"type\" integer, \"otherid\" text)"];
+        [_database executeUpdate:@"create table sessions (type integer, otherid text)"];
     }
     [_session openWithPeerId:[AVUser currentUser].username];
 
-    FMResultSet *rs = [_database executeQuery:@"select \"type\", \"otherid\" from \"sessions\""];
+    FMResultSet *rs = [_database executeQuery:@"select type, otherid from sessions"];
     NSMutableArray *peerIds = [[NSMutableArray alloc] init];
     while ([rs next]) {
         NSInteger type = [rs intForColumn:@"type"];
@@ -108,56 +110,50 @@ static BOOL initialized = NO;
     return _chatRooms;
 }
 - (void)addChatWithPeerId:(NSString *)peerId {
-    BOOL exist = NO;
-    for (NSDictionary *dict in _chatRooms) {
-        CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
-        NSString *otherid = [dict objectForKey:@"otherid"];
-        if (type == CDChatRoomTypeSingle && [peerId isEqualToString:otherid]) {
-            exist = YES;
-            break;
-        }
-    }
-    if (!exist) {
+    if (![self existsInChatRooms:CDChatRoomTypeSingle targetId:peerId]) {
         [_session watchPeerIds:@[peerId]];
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeSingle] forKey:@"type"];
-        [dict setObject:peerId forKey:@"otherid"];
-        [_chatRooms addObject:dict];
-        [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeSingle], peerId]];
+        CDChatRoomType type=CDChatRoomTypeSingle;
+        [self addSessionToChatRoomsAndDataBase:type targetId:peerId];
     }
 }
 
-- (AVGroup *)joinGroup:(NSString *)groupId {
-    BOOL exist = NO;
+-(void)addSessionToChatRoomsAndDataBase:(CDChatRoomType)type targetId:(NSString*)targetId{
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:[NSNumber numberWithInteger:type] forKey:@"type"];
+    [dict setObject:targetId forKey:@"otherid"];
+    [_chatRooms addObject:dict];
+    [_database executeUpdate:@"insert into sessions (type, otherid) values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:type], targetId]];
+}
+
+-(BOOL)existsInChatRooms:(CDChatRoomType)targetType targetId:(NSString*)targetId{
     for (NSDictionary *dict in _chatRooms) {
         CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
         NSString *otherid = [dict objectForKey:@"otherid"];
-        if (type == CDChatRoomTypeGroup && [groupId isEqualToString:otherid]) {
-            exist = YES;
-            break;
+        if (type == targetType && [targetId isEqualToString:otherid]) {
+            return YES;
         }
     }
-    if (!exist) {
+    return NO;
+}
+
+- (AVGroup *)joinGroup:(NSString *)groupId {
+    CDChatRoomType targetType=CDChatRoomTypeGroup;
+    NSString* targetId=groupId;
+    if (![self existsInChatRooms:targetType targetId:targetId]) {
         AVGroup *group = [AVGroup getGroupWithGroupId:groupId session:_session];
         group.delegate = self;
         [group join];
         
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeGroup] forKey:@"type"];
-        [dict setObject:groupId forKey:@"otherid"];
-        [_chatRooms addObject:dict];
-        [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeGroup], groupId]];
+        [self addSessionToChatRoomsAndDataBase:CDChatRoomTypeGroup targetId:groupId];
     }
     return [AVGroup getGroupWithGroupId:groupId session:_session];;
 }
+
 - (void)startNewGroup:(AVGroupResultBlock)callback {
     [AVGroup createGroupWithSession:_session groupDelegate:self callback:^(AVGroup *group, NSError *error) {
         if (!error) {
-            NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-            [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeGroup] forKey:@"type"];
-            [dict setObject:group.groupId forKey:@"otherid"];
-            [_chatRooms addObject:dict];
-            [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeGroup], group.groupId]];
+            [self addSessionToChatRoomsAndDataBase:CDChatRoomTypeGroup
+                                          targetId:group.groupId];
             if (callback) {
                 callback(group, error);
             }
@@ -167,36 +163,42 @@ static BOOL initialized = NO;
     }];
 }
 
+- (NSDictionary *)insertMessageToDB:(NSString*) fromId  toId:(NSString *)toId type:(NSString *)type timestamp:(NSNumber*)timestamp message:(NSString *)message {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:fromId forKey:@"fromid"];
+    [dict setObject:toId forKey:@"toid"];
+    [dict setObject:type forKey:@"type"];
+    [dict setObject:message forKey:@"message"];
+    [dict setObject:timestamp forKey:@"time"];
+    [_database executeUpdate:@"insert into messages (fromid, toid, type, message, time) values (:fromid, :toid, :type, :message, :time)" withParameterDictionary:dict];
+    return dict;
+}
+
+- (NSDictionary *)insertSendMessageToDB:(NSString *)peerId type:(NSString *)type message:(NSString *)message {
+  return [self insertMessageToDB:_session.peerId toId:peerId type:type timestamp:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] message:message];
+}
+
 - (void)sendMessage:(NSString *)message toPeerId:(NSString *)peerId {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:_session.peerId forKey:@"dn"];
     [dict setObject:@"text" forKey:@"type"];
-    [dict setObject:message forKey:@"msg"];
+    [dict setObject:message forKey:@"message"];
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
     NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     AVMessage *messageObject = [AVMessage messageForPeerWithSession:_session toPeerId:peerId payload:payload];
     [_session sendMessage:messageObject];
     
-    dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"fromid"];
-    [dict setObject:peerId forKey:@"toid"];
-    [dict setObject:@"text" forKey:@"type"];
-    [dict setObject:message forKey:@"message"];
-    [dict setObject:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] forKey:@"time"];
-    [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"message\", \"time\") values (:fromid, :toid, :type, :message, :time)" withParameterDictionary:dict];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:dict];
-    
+    NSString* type=@"text";
+    [self insertMessageToDBAndNotify:peerId type:type message:message];
 }
+
 
 - (void)sendAttachment:(AVObject *)object toPeerId:(NSString *)peerId {
     NSString *type = [object objectForKey:@"type"];
 //    AVFile *file = [object objectForKey:type];
     
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"dn"];
-    [dict setObject:type forKey:@"type"];
-    [dict setObject:object.objectId forKey:@"object"];
+    NSDictionary *dict=[self createMsgDict:_session.peerId type:type message:object.objectId];
     
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
@@ -204,47 +206,41 @@ static BOOL initialized = NO;
     AVMessage *messageObject = [AVMessage messageForPeerWithSession:_session toPeerId:peerId payload:payload];
     [_session sendMessage:messageObject];
     //    [_session sendMessage:payload isTransient:NO toPeerIds:@[peerId]];
-    
-    dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"fromid"];
-    [dict setObject:peerId forKey:@"toid"];
-    [dict setObject:type forKey:@"type"];
-    [dict setObject:object.objectId forKey:@"object"];
-    [dict setObject:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] forKey:@"time"];
-    [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"object\", \"time\") values (:fromid, :toid, :type, :object, :time)" withParameterDictionary:dict];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:dict];
-    
+    [self insertMessageToDBAndNotify:peerId type:type message:object.objectId];
+}
+
+- (void )insertMessageToDBAndNotify:(NSString *)targetId type:(NSString *)type message:(NSString *)message {
+    NSDictionary *msgDict=[self insertSendMessageToDB:targetId type:type message:	message];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:msgDict];
 }
 
 - (void)sendMessage:(NSString *)message toGroup:(NSString *)groupId {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:_session.peerId forKey:@"dn"];
     [dict setObject:@"text" forKey:@"type"];
-    [dict setObject:message forKey:@"msg"];
+    [dict setObject:message forKey:@"message"];
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
     NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     AVGroup *group = [AVGroup getGroupWithGroupId:groupId session:_session];
     AVMessage *messageObject = [AVMessage messageForGroup:group payload:payload];
     [group sendMessage:messageObject];
-    
-    dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"fromid"];
-    [dict setObject:groupId forKey:@"toid"];
-    [dict setObject:@"text" forKey:@"type"];
+
+    [self insertMessageToDBAndNotify:groupId type:@"text" message:message];
+}
+
+- (NSDictionary*)createMsgDict:(NSString*)dn type:(NSString*)type message:(NSString*)message{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:dn forKey:@"dn"];
+    [dict setObject:type forKey:@"type"];
     [dict setObject:message forKey:@"message"];
-    [dict setObject:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] forKey:@"time"];
-    [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"message\", \"time\") values (:fromid, :toid, :type, :message, :time)" withParameterDictionary:dict];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:dict];
-    
+    return dict;
 }
 
 - (void)sendAttachment:(AVObject *)object toGroup:(NSString *)groupId {
     NSString *type = [object objectForKey:@"type"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"dn"];
-    [dict setObject:type forKey:@"type"];
-    [dict setObject:object.objectId forKey:@"object"];
+    NSDictionary *dict=[self createMsgDict:_session.peerId type:type message:object.objectId];
+    
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
     NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -252,20 +248,17 @@ static BOOL initialized = NO;
     AVMessage *messageObject = [AVMessage messageForGroup:group payload:payload];
     [group sendMessage:messageObject];
     
-    dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"fromid"];
-    [dict setObject:groupId forKey:@"toid"];
-    [dict setObject:type forKey:@"type"];
-    [dict setObject:object.objectId forKey:@"object"];
-    [dict setObject:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] forKey:@"time"];
-    [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"object\", \"time\") values (:fromid, :toid, :type, :object, :time)" withParameterDictionary:dict];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:dict];
+    [self insertMessageToDBAndNotify:groupId type:type message:object.objectId];
 
 }
 
 - (NSArray *)getMessagesForPeerId:(NSString *)peerId {
     NSString *selfId = _session.peerId;
-    FMResultSet *rs = [_database executeQuery:@"select \"fromid\", \"toid\", \"type\", \"message\", \"object\", \"time\" from \"messages\" where (\"fromid\"=? and \"toid\"=?) or (\"fromid\"=? and \"toid\"=?)" withArgumentsInArray:@[selfId, peerId, peerId, selfId]];
+    FMResultSet *rs = [_database executeQuery:@"select fromid, toid, type, message, object, time from messages where (fromid=? and toid=?) or (fromid=? and toid=?)" withArgumentsInArray:@[selfId, peerId, peerId, selfId]];
+    return [self getMessagesByResultSet:rs];
+}
+
+-(NSArray*)getMessagesByResultSet:(FMResultSet*)rs{
     NSMutableArray *result = [NSMutableArray array];
     while ([rs next]) {
         NSString *fromid = [rs stringForColumn:@"fromid"];
@@ -273,39 +266,16 @@ static BOOL initialized = NO;
         double time = [rs doubleForColumn:@"time"];
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
         NSString *type = [rs stringForColumn:@"type"];
-        if ([type isEqualToString:@"text"]) {
-            NSString *message = [rs stringForColumn:@"message"];
-            NSDictionary *dict = @{@"fromid":fromid, @"toid":toid, @"type":type, @"message":message, @"time":date};
-            [result addObject:dict];
-        } else {
-            NSString *object = [rs stringForColumn:@"object"];
-            NSDictionary *dict = @{@"fromid":fromid, @"toid":toid, @"type":type, @"object":object, @"time":date};
-            [result addObject:dict];
-        }
+        NSString *message = [rs stringForColumn:@"message"];
+        NSDictionary *dict = @{@"fromid":fromid, @"toid":toid, @"type":type, @"message":message, @"time":date};
+        [result addObject:dict];
     }
     return result;
 }
 
 - (NSArray *)getMessagesForGroup:(NSString *)groupId {
-    FMResultSet *rs = [_database executeQuery:@"select \"fromid\", \"toid\", \"type\", \"message\", \"object\", \"time\" from \"messages\" where \"toid\"=?" withArgumentsInArray:@[groupId]];
-    NSMutableArray *result = [NSMutableArray array];
-    while ([rs next]) {
-        NSString *fromid = [rs stringForColumn:@"fromid"];
-        NSString *toid = [rs stringForColumn:@"toid"];
-        double time = [rs doubleForColumn:@"time"];
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970:time];
-        NSString *type = [rs stringForColumn:@"type"];
-        if ([type isEqualToString:@"text"]) {
-            NSString *message = [rs stringForColumn:@"message"];
-            NSDictionary *dict = @{@"fromid":fromid, @"toid":toid, @"type":type, @"message":message, @"time":date};
-            [result addObject:dict];
-        } else {
-            NSString *object = [rs stringForColumn:@"object"];
-            NSDictionary *dict = @{@"fromid":fromid, @"toid":toid, @"type":type, @"object":object, @"time":date};
-            [result addObject:dict];
-        }
-    }
-    return result;
+    FMResultSet *rs = [_database executeQuery:@"select fromid, toid, type, message, object, time from messages where toid=?" withArgumentsInArray:@[groupId]];
+    return [self getMessagesByResultSet:rs];
 }
 
 - (void)getHistoryMessagesForPeerId:(NSString *)peerId callback:(AVArrayResultBlock)callback {
@@ -345,20 +315,8 @@ static BOOL initialized = NO;
     NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
     NSLog(@"%@", jsonDict);
     NSString *type = [jsonDict objectForKey:@"type"];
-    NSString *msg = [jsonDict objectForKey:@"msg"];
-    NSString *object = [jsonDict objectForKey:@"object"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:message.fromPeerId forKey:@"fromid"];
-    [dict setObject:session.peerId forKey:@"toid"];
-    [dict setObject:@(message.timestamp/1000) forKey:@"time"];
-    [dict setObject:type forKey:@"type"];
-    if ([type isEqualToString:@"text"]) {
-        [dict setObject:msg forKey:@"message"];
-        [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"message\", \"time\") values (:fromid, :toid, :type, :message, :time)" withParameterDictionary:dict];
-    } else {
-        [dict setObject:object forKey:@"object"];
-        [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"object\", \"time\") values (:fromid, :toid, :type, :object, :time)" withParameterDictionary:dict];
-    }
+    NSString *msg = [jsonDict objectForKey:@"message"];
+    NSDictionary *dict=[self insertMessageToDB:message.fromPeerId toId:session.peerId type:type timestamp:@(message.timestamp/1000) message:msg];
     
     BOOL exist = NO;
     for (NSDictionary *dict in _chatRooms) {
@@ -440,21 +398,9 @@ static BOOL initialized = NO;
     NSLog(@"%@", jsonDict);
     
     NSString *type = [jsonDict objectForKey:@"type"];
-    NSString *msg = [jsonDict objectForKey:@"msg"];
-    NSString *object = [jsonDict objectForKey:@"object"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:message.fromPeerId forKey:@"fromid"];
-    [dict setObject:group.groupId forKey:@"toid"];
-    [dict setObject:@(message.timestamp/1000) forKey:@"time"];
-    [dict setObject:type forKey:@"type"];
-    if ([type isEqualToString:@"text"]) {
-        [dict setObject:msg forKey:@"message"];
-        [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"message\", \"time\") values (:fromid, :toid, :type, :message, :time)" withParameterDictionary:dict];
-    } else {
-        [dict setObject:object forKey:@"object"];
-        [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"object\", \"time\") values (:fromid, :toid, :type, :object, :time)" withParameterDictionary:dict];
-    }
-
+    NSString *msg = [jsonDict objectForKey:@"message"];
+    NSDictionary *dict=[self insertMessageToDB:message.fromPeerId toId:group.groupId type:type timestamp:@(message.timestamp/1000) message:msg];
+    
     BOOL exist = NO;
     for (NSDictionary *dict in _chatRooms) {
         CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
@@ -490,7 +436,7 @@ static BOOL initialized = NO;
             [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeGroup] forKey:@"type"];
             [dict setObject:group.groupId forKey:@"otherid"];
             [_chatRooms addObject:dict];
-            [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeGroup], group.groupId]];
+            [_database executeUpdate:@"insert into sessions (type, otherid) values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeGroup], group.groupId]];
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
         }
     }
