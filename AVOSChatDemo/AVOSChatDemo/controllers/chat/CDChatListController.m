@@ -13,6 +13,7 @@
 #import "ZXingWidgetController.h"
 #import "MultiFormatReader.h"
 #import "CDChatConfirmController.h"
+#import "ChatRoom.h"
 
 enum : NSUInteger {
     kTagNameLabel = 10000,
@@ -61,9 +62,12 @@ enum : NSUInteger {
 - (void)addContactForGroup {
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
     [[CDSessionManager sharedInstance] startNewGroup:^(AVGroup *group, NSError *error) {
-        controller.type = CDMsgRoomTypeGroup;
-        controller.group = group;
-        [self.navigationController pushViewController:controller animated:YES];
+        if(error){
+        }else{
+            controller.type = CDMsgRoomTypeGroup;
+            controller.group = group;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
     }];
 }
 
@@ -106,31 +110,27 @@ enum : NSUInteger {
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *chatRoom = [[[CDSessionManager sharedInstance] chatRooms] objectAtIndex:indexPath.row];
-    CDMsgRoomType type = [[chatRoom objectForKey:@"type"] integerValue];
-    NSString *otherid = [chatRoom objectForKey:@"otherid"];
+    ChatRoom *chatRoom = [[[CDSessionManager sharedInstance] chatRooms] objectAtIndex:indexPath.row];
+    CDMsgRoomType type=[chatRoom roomType];
     NSMutableString *nameString = [[NSMutableString alloc] init];
     if (type == CDMsgRoomTypeGroup) {
-        [nameString appendFormat:@"group:%@", otherid];
+        [nameString appendFormat:@"group:%@", chatRoom.group.groupId];
     } else {
-        [nameString appendFormat:@"%@", otherid];
+        [nameString appendFormat:@"%@", chatRoom.chatUser.username];
     }
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:kTagNameLabel];
     label.text = nameString;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *chatRoom = [[[CDSessionManager sharedInstance] chatRooms] objectAtIndex:indexPath.row];
-    CDMsgRoomType type = [[chatRoom objectForKey:@"type"] integerValue];
-    NSString *otherid = [chatRoom objectForKey:@"otherid"];
+    ChatRoom *chatRoom = [[[CDSessionManager sharedInstance] chatRooms] objectAtIndex:indexPath.row];
+    CDMsgRoomType type = chatRoom.roomType;
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
     controller.type = type;
     if (type == CDMsgRoomTypeGroup) {
-        AVGroup *group = [[CDSessionManager sharedInstance] joinGroup:otherid];
-        controller.group = group;
-        controller.otherId = otherid;
+        controller.group=chatRoom.group;
     } else {
-        controller.otherId = otherid;
+        controller.chatUser=chatRoom.chatUser;
     }
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -196,7 +196,6 @@ enum : NSUInteger {
             controller.otherId = otherId;
             [self.navigationController pushViewController:controller animated:YES];
         }
-        
     }];
     // [self dismissViewControllerAnimated:NO completion:nil];
 }

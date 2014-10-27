@@ -10,7 +10,7 @@
 #import "CDCommon.h"
 
 @interface CDContactDetailController : CDBaseController
-@property(nonatomic, strong) AVUser *user;
+@property(nonatomic, strong) User *user;
 
-- (instancetype)initWithUser:(AVUser *)user;
+- (instancetype)initWithUser:(User *)user;
 @end

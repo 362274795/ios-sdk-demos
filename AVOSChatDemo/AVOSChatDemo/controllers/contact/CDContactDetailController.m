@@ -19,7 +19,7 @@
 
 @implementation CDContactDetailController
 
-- (instancetype)initWithUser:(AVUser *)user {
+- (instancetype)initWithUser:(User *)user {
     if ((self = [super init])) {
         self.user = user;
     }
@@ -73,7 +73,7 @@
     CDBaseNavigationController *nav = self.tabBarController.childViewControllers.firstObject;
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
     [[CDSessionManager sharedInstance] addChatWithPeerId:self.user.username];
-    controller.otherId = self.user.username;
+    controller.chatUser = self.user;
     controller.type = CDMsgRoomTypeSingle;
     self.tabBarController.selectedIndex = 0;
     [nav popToRootViewControllerAnimated:NO];

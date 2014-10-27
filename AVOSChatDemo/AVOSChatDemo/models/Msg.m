@@ -12,17 +12,29 @@
 
 @implementation Msg
 
+@synthesize fromPeerId;
+@synthesize toPeerId;
+@synthesize timestamp;
+
+@synthesize content;
+@synthesize convid;
+@synthesize objectId;
+
+@synthesize type;
+@synthesize roomType;
+@synthesize status;
+
 -(NSDictionary*)toMessagePayloadDict{
-    return @{OBJECT_ID:_objectId,CONTENT:_content,
-      STATUS:@(_status),TYPE:@(_type),
-             ROOM_TYPE:@(_roomType),CONV_ID:_convid};
+    return @{OBJECT_ID:objectId,CONTENT:content,
+      STATUS:@(status),TYPE:@(type),
+             ROOM_TYPE:@(roomType),CONV_ID:convid};
 }
 
 -(NSDictionary*)toDatabaseDict{
-    NSDictionary *dict=[self toMessagePayloadDict];
-    [dict setValue:[[NSNumber numberWithLongLong:_timestamp] stringValue] forKey:TIMESTAMP];
-    [dict setValue:_fromPeerId forKey:FROM_PEER_ID];
-    [dict setValue:_toPeerId forKey:TO_PEER_ID];
+    NSMutableDictionary *dict=[[self toMessagePayloadDict] mutableCopy];
+    [dict setValue:[[NSNumber numberWithLongLong:timestamp] stringValue] forKey:TIMESTAMP];
+    [dict setValue:fromPeerId forKey:FROM_PEER_ID];
+    [dict setValue:toPeerId forKey:TO_PEER_ID];
     NSString* curUserId=[User curUserId];
     [dict setValue:curUserId forKey:OWNER_ID];
     return dict;
@@ -38,16 +50,17 @@
 
 -(NSString*)getOtherId{
     NSString* curUserId=[User curUserId];
-    if(_roomType==CDMsgRoomTypeSingle){
-        if([curUserId isEqualToString:_fromPeerId]){
-            return _toPeerId;
+    if(roomType==CDMsgRoomTypeSingle){
+        if([curUserId isEqualToString:fromPeerId]){
+            return toPeerId;
         }else{
-            return _fromPeerId;
+            return fromPeerId;
         }
     }else{
-        return _convid; // groupId
+        return convid; // groupId
     }
 }
+
 
 +(Msg*)createMsg:(NSString*) objectId fromPeerId:(NSString*)fromPeerId toPeerId:(NSString*)toPeerId timestamp:(int64_t)timestamp content:(NSString*)content type:(CDMsgType)type status:(CDMsgStatus)status roomType:(CDMsgRoomType)roomType convid:(NSString*)convid{
     Msg* msg=[[Msg alloc] init];
@@ -71,6 +84,10 @@
     return [self createMsg:dict[@"objectId"] fromPeerId:avMsg.fromPeerId toPeerId:avMsg.toPeerId timestamp:avMsg.timestamp content:dict[@"content"]
                       type:(int)dict[@"type"]
                       status:(int)dict[@"status"] roomType:(int)dict[@"roomType"] convid:dict[@"convid"]];
+}
+
+-(NSDate*)getTimestampDate{
+    return [NSDate dateWithTimeIntervalSince1970:timestamp/1000];
 }
 
 @end

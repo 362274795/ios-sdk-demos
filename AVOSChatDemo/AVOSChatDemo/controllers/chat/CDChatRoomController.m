@@ -13,8 +13,6 @@
 #import "UIImage+Resize.h"
 
 @interface CDChatRoomController () <JSMessagesViewDelegate, JSMessagesViewDataSource, QBImagePickerControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate> {
-    NSMutableArray *_timestampArray;
-    NSDate *_lastTime;
     NSMutableDictionary *_loadedData;
     CDSessionManager* sessionManager;
 }
@@ -45,7 +43,7 @@
         }
         self.title = title;
     } else {
-        self.title = self.otherId;
+        self.title = self.chatUser.username;
     }
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showDetail:)];
     
@@ -67,31 +65,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)refreshTimestampArray {
-    NSDate *lastDate = nil;
-    NSMutableArray *hasTimestampArray = [NSMutableArray array];
-    for (NSDictionary *dict in self.messages) {
-        NSDate *date = [dict objectForKey:@"time"];
-        if (!lastDate) {
-            lastDate = date;
-            [hasTimestampArray addObject:[NSNumber numberWithBool:YES]];
-        } else {
-            if ([date timeIntervalSinceDate:lastDate] > 60) {
-                [hasTimestampArray addObject:[NSNumber numberWithBool:YES]];
-                lastDate = date;
-            } else {
-                [hasTimestampArray addObject:[NSNumber numberWithBool:NO]];
-            }
-        }
-    }
-    _timestampArray = hasTimestampArray;
-}
-
 - (void)showDetail:(id)sender {
     CDChatDetailController *controller = [[CDChatDetailController alloc] init];
     controller.type = self.type;
     if (self.type == CDMsgRoomTypeSingle) {
-        controller.otherId = self.otherId;
+        controller.otherId = self.chatUser.objectId;
     } else if (self.type == CDMsgRoomTypeGroup) {
         controller.otherId = self.group.groupId;
     }
@@ -105,43 +83,26 @@
 
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
-    if (self.type == CDMsgRoomTypeGroup) {
-        if (!self.group.groupId) {
-            return;
-        }
-        [sessionManager sendMessage:text type:CDMsgTypeText toPeerId:nil group:self.group];
-    } else{
-        [sessionManager sendMessage:text type:CDMsgTypeText toPeerId:self.otherId group:nil];
-    }
-    [self refreshTimestampArray];
+    [sessionManager sendMessage:text type:CDMsgTypeText
+                       toPeerId:self.chatUser.objectId group:self.group];
     [self finishSend];
 }
 
-- (void)sendAttachment:(NSString *)objectId type:(NSString*)type{
-    if (self.type == CDMsgRoomTypeGroup) {
-        if (!self.group.groupId) {
-            return;
-        }
-        [sessionManager sendAttachment:objectId type:CDMsgTypeImage toPeerId:nil group:self.group];
-    } else {
-        [sessionManager sendAttachment:objectId type:CDMsgTypeImage toPeerId:self.otherId group:nil];
-    }
-    [self refreshTimestampArray];
+- (void)sendAttachment:(NSString *)objectId{
+    [sessionManager sendAttachment:objectId type:CDMsgTypeImage toPeerId:self.chatUser.objectId group:self.group];
     [self finishSend];
 }
 
 - (void)cameraPressed:(id)sender{
-    
     [self.inputToolBarView.textView resignFirstResponder];
-
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"相册", nil];
     [actionSheet showInView:self.view];
 }
 
 - (JSBubbleMessageType)messageTypeForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *fromid = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"fromid"];
-    
-    return (![fromid isEqualToString:[AVUser currentUser].username]) ? JSBubbleMessageTypeIncoming : JSBubbleMessageTypeOutgoing;
+    Msg* msg=[self.messages objectAtIndex:indexPath.row];
+    NSString *fromPeerId=msg.fromPeerId;
+    return (![fromPeerId isEqualToString:[User curUserId]]) ? JSBubbleMessageTypeIncoming : JSBubbleMessageTypeOutgoing;
 }
 
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -149,11 +110,11 @@
 }
 
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *type = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"type"];
-
-    if ([type isEqualToString:@"text"]) {
+    Msg* msg=[self.messages objectAtIndex:indexPath.row];
+    CDMsgType type = msg.type;
+    if (type ==CDMsgTypeText) {
         return JSBubbleMediaTypeText;
-    } else if ([type isEqualToString:@"image"]) {
+    } else if (type==CDMsgTypeImage) {
         return JSBubbleMediaTypeImage;
     }
     return JSBubbleMediaTypeText;
@@ -218,7 +179,18 @@
 //  Required if using `JSMessagesViewTimestampPolicyCustom`
 //
 - (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [[_timestampArray objectAtIndex:indexPath.row] boolValue];
+    if(indexPath.row==0){
+        return YES;
+    }else{
+        Msg* msg=[self.messages objectAtIndex:indexPath.row];
+        Msg* lastMsg=[self.messages objectAtIndex:indexPath.row-1];
+        int interval=[[msg getTimestampDate] timeIntervalSinceDate:[lastMsg getTimestampDate]];
+        if(interval>60*5){
+            return YES;
+        }else{
+            return NO;
+        }
+    }
 }
 
 - (BOOL)hasNameForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -233,17 +205,19 @@
 //    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
 //        return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"];
 //    }
-    return [[self.messages objectAtIndex:indexPath.row] objectForKey:@"message"];
+    Msg* msg=[self.messages objectAtIndex:indexPath.row];
+    return msg.content;
 }
 
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDate *time = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"time"];
-    return time;
+    Msg* msg=[self.messages objectAtIndex:indexPath.row];
+    return [msg getTimestampDate];
 }
 
 - (NSString *)nameForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *name = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"fromid"];
-    return name;
+    Msg *msg=[self.messages objectAtIndex:indexPath.row];
+    User* user=[sessionManager lookupUser:msg.fromPeerId];
+    return user.username;
 }
 
 - (UIImage *)avatarImageForIncomingMessage {
@@ -272,34 +246,28 @@
 }
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSNumber *r = @(indexPath.row);
-    AVFile *file = [_loadedData objectForKey:r];
-    if (file) {
-        NSData *data = [file getData];
-        UIImage *image = [[UIImage alloc] initWithData:data];
+    Msg *msg=[self.messages objectAtIndex:indexPath.row];
+    UIImage* image = [_loadedData objectForKey:msg.objectId];
+    if (image) {
         return image;
     } else {
-        NSString *objectId = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"message"];
-        NSString *type = [[self.messages objectAtIndex:indexPath.row] objectForKey:@"type"];
-        AVQuery *query=[AVQuery queryWithClassName:@"_File"];
-        [query getObjectInBackgroundWithId:objectId block:^(AVObject *object, NSError *error) {
-            AVFile* file=[AVFile fileWithURL:[object objectForKey:@"url"]];
-            [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-                [_loadedData setObject:file forKey:r];
-                [self.tableView reloadData];
-            }];
-        }];
-        UIImage *image = [UIImage imageNamed:@"image_placeholder"];
+        Msg* msg=[self.messages objectAtIndex:indexPath.row];
+        NSString* path=[CDSessionManager getPathByObjectId:msg.objectId];
+        NSFileManager* fileMan=[NSFileManager defaultManager];
+        if([fileMan fileExistsAtPath:path]){
+            NSData* data=[fileMan contentsAtPath:path];
+            [_loadedData setObject:data forKey:msg.objectId];
+            UIImage* image=[UIImage imageWithData:data];
+            [_loadedData setObject:image forKey:msg.objectId];
+        }
         return image;
     }
 }
 
 - (void)messageUpdated:(NSNotification *)notification {
-    NSArray *messages = nil;
-    NSString* convid=[CDSessionManager getConvid:self.type otherId:self.otherId groupId:self.group.groupId];
-    messages = [sessionManager getMsgsForConvid:convid];
+    NSString* convid=[CDSessionManager getConvid:self.type otherId:self.chatUser.objectId groupId:self.group.groupId];
+    NSArray *messages  = [sessionManager getMsgsForConvid:convid];
     self.messages = messages;
-    [self refreshTimestampArray];
     [self.tableView reloadData];
     [self scrollToBottomAnimated:YES];
 }
@@ -397,12 +365,10 @@
 }
 
 -(void)sendImage:(NSData*)imageData{
-    AVFile *imageFile = [AVFile fileWithName:@"image.png" data:imageData];
-    [imageFile saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            [self sendAttachment:imageFile type:@"image"];
-        }
-    }];
+    NSString* objectId=[CDSessionManager uuid];
+    NSString* path=[CDSessionManager getPathByObjectId:objectId];
+    [imageData writeToFile:path atomically:NO];
+    [self sendAttachment:objectId];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {

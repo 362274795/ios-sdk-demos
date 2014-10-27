@@ -29,6 +29,8 @@
 
 +(NSString*)getConvid:(CDMsgRoomType)roomType otherId:(NSString*)otherId groupId:(NSString*)groupId;
 +(NSString*)convid:(NSString*)myId otherId:(NSString*)otherId;
++(NSString*)getPathByObjectId:(NSString*)objectId;
++(NSString*)uuid;
 
 - (void)registerUsers:(NSArray*)users;
 - (void)registerUser:(User*)user;

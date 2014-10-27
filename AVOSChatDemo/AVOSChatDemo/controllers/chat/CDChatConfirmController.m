@@ -48,7 +48,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     NSString *name = self.otherId;
-    if (self.type == CDChatRoomTypeGroup) {
+    if (self.type == CDMsgRoomTypeGroup) {
         name = [NSString stringWithFormat:@"group:%@", name];
     }
     self.nameLabel.text = name;
@@ -62,9 +62,9 @@
 #pragma mark - Actions
 
 -(void)confirm:(id)sender {
-    if (self.type == CDChatRoomTypeGroup) {
+    if (self.type == CDMsgRoomTypeGroup) {
         [[CDSessionManager sharedInstance] joinGroup:self.otherId];
-    } else if (self.type == CDChatRoomTypeSingle) {
+    } else if (self.type == CDMsgRoomTypeSingle) {
         [[CDSessionManager sharedInstance] addChatWithPeerId:self.otherId];
     }
     [self.navigationController popViewControllerAnimated:YES];

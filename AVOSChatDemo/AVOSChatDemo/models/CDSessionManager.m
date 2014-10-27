@@ -9,6 +9,8 @@
 #import "FMDB.h"
 #import "CDCommon.h"
 #import "Msg.h"
+#import "ChatRoom.h"
+#import "Utils.h"
 
 @interface CDSessionManager () {
     FMDatabase *_database;
@@ -72,6 +74,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 //if type is image ,message is attment.objectId
 
 - (void)commonInit {
+    NSLog(@"convid=%@",[CDSessionManager convid:@"u1234" otherId:@"u0988"]);
     if (![_database tableExists:@"messages"]) {
         [_database executeUpdate:messagesTableSQL];
     }
@@ -79,27 +82,24 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 
     FMResultSet *rs = [_database executeQuery:@"select * from messages group by convid order by time desc" ];
     NSArray *msgs=[self getMsgsByResultSet:rs];
-    NSMutableArray *peerIds = [[NSMutableArray alloc] init];
     for(Msg* msg in msgs){
         NSString* otherId=[msg getOtherId];
+        ChatRoom* chatRoom=[[ChatRoom alloc] init];
+        chatRoom.roomType=msg.roomType;
         if(msg.roomType==CDMsgRoomTypeSingle){
-            [peerIds addObject:otherId];
+            User* other=[self lookupUser:otherId];
+            chatRoom.chatUser=other;
         }else{
             AVGroup *group = [AVGroup getGroupWithGroupId:otherId session:_session];
-            group.delegate = self;
-            [group join];
+            chatRoom.group=group;
         }
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        [dict setObject:[NSNumber numberWithInt:msg.roomType] forKey:@"roomType"];
-        [dict setObject:otherId forKey:@"otherid"];
-        [_chatRooms addObject:dict];
+        [_chatRooms addObject:chatRoom];
     }
-    [_session watchPeerIds:peerIds];
     initialized = YES;
 }
 
 - (void)clearData {
-    [_database executeUpdate:@"DROP TABLE IF EXISTS messages"];
+    //[_database executeUpdate:@"DROP TABLE IF EXISTS messages"];
     [_chatRooms removeAllObjects];
     [_session close];
     initialized = NO;
@@ -148,7 +148,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
         }
         [result appendString:[sortedArr objectAtIndex:i]];
     }
-    return result;
+    return [Utils md5:result];
 }
 
 +(NSString*)uuid{
@@ -176,7 +176,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 -(Msg*)createAndSendMsg:(NSString*)objectId type:(CDMsgType)type content:(NSString*)content toPeerId:(NSString*)toPeerId group:(AVGroup*)group{
     Msg* msg=[[Msg alloc] init];
     msg.toPeerId=toPeerId;
-    int64_t currentTime=(int64_t)CACurrentMediaTime()*1000;
+    int64_t currentTime=((int64_t)CACurrentMediaTime())*1000;
     msg.timestamp=currentTime;
     msg.content=content;
     NSString* curUserId=[User curUserId];
@@ -218,9 +218,9 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     [self insertMessageToDBAndNotify:msg];
 }
 
--(NSString*)getFilesPath{
-    NSString* appPath=[[NSBundle mainBundle] resourcePath];
-    NSString* filesPath=[appPath stringByAppendingString:@"files/"];
++(NSString*)getFilesPath{
+    NSString* appPath=[NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString* filesPath=[appPath stringByAppendingString:@"/files/"];
     NSFileManager *fileMan=[NSFileManager defaultManager];
     NSError *error;
     BOOL isDir=YES;
@@ -233,12 +233,12 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     return filesPath;
 }
 
--(NSString*)getPathByObjectId:(NSString*)objectId{
++(NSString*)getPathByObjectId:(NSString*)objectId{
     return [[self getFilesPath] stringByAppendingString:objectId];
 }
 
 - (void)sendAttachment:(NSString*)objectId type:(CDMsgType)type toPeerId:(NSString *)toPeerId group:(AVGroup*)group{
-    NSString* path=[self getPathByObjectId:objectId];
+    NSString* path=[CDSessionManager getPathByObjectId:objectId];
     User* curUser=[User currentUser];
     double time=[[NSDate date] timeIntervalSince1970];
     NSMutableString *name=[[curUser username] mutableCopy];

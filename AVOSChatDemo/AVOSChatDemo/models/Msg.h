@@ -40,8 +40,8 @@ typedef enum : NSUInteger{
 #define ROOM_TYPE @"roomType"
 #define STATUS @"status"
 
-@interface Msg : NSObject
-
+@interface Msg : NSObject{
+}
 @property NSString* fromPeerId;
 @property NSString* toPeerId;
 @property int64_t timestamp;
@@ -59,5 +59,6 @@ typedef enum : NSUInteger{
 -(NSString *)toMessagePayload;
 -(NSString*)getOtherId;
 -(NSDictionary*)toDatabaseDict;
+-(NSDate*)getTimestampDate;
 
 @end

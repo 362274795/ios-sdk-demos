@@ -97,13 +97,13 @@ enum : NSUInteger {
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    AVUser *user = [self.users objectAtIndex:indexPath.row];
+    User *user = [self.users objectAtIndex:indexPath.row];
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:kTagNameLabel];
     label.text = user.username;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    AVUser *user = [self.users objectAtIndex:indexPath.row];
+    User *user = [self.users objectAtIndex:indexPath.row];
     CDContactDetailController *controller = [[CDContactDetailController alloc] initWithUser:user];
     [self.navigationController pushViewController:controller animated:YES];
 }

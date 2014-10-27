@@ -12,7 +12,7 @@
 #import "CDSessionManager.h"
 
 @interface CDChatRoomController : JSMessagesViewController
-@property (nonatomic, strong) NSString *otherId;
+@property (nonatomic, strong) User *chatUser;
 @property (nonatomic) CDMsgRoomType type;
 @property (nonatomic, strong) AVGroup *group;
 @end
