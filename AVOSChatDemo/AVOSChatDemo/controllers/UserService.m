@@ -20,6 +20,10 @@
     [q findObjectsInBackgroundWithBlock:block];
 }
 
++(NSString*)getPeerId:(User*)user{
+    return user.objectId;
+}
+
 // should exclude friends
 +(void)findUsers:(NSString *)partName withBlock:(AVArrayResultBlock)block{
     AVQuery *q=[User query];

@@ -13,6 +13,6 @@
 
 @interface CDChatRoomController : JSMessagesViewController
 @property (nonatomic, strong) NSString *otherId;
-@property (nonatomic) CDChatRoomType type;
+@property (nonatomic) CDMsgRoomType type;
 @property (nonatomic, strong) AVGroup *group;
 @end

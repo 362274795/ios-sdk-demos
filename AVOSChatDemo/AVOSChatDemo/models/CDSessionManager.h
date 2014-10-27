@@ -9,11 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "CDCommon.h"
 
-typedef enum : NSUInteger {
-    CDChatRoomTypeSingle = 1,
-    CDChatRoomTypeGroup,
-} CDChatRoomType;
-
 @interface CDSessionManager : NSObject <AVSessionDelegate, AVSignatureDelegate, AVGroupDelegate>
 + (instancetype)sharedInstance;
 //- (void)startSession;
@@ -32,4 +27,8 @@ typedef enum : NSUInteger {
 - (void)getHistoryMessagesForPeerId:(NSString *)peerId callback:(AVArrayResultBlock)callback;
 - (void)getHistoryMessagesForGroup:(NSString *)groupId callback:(AVArrayResultBlock)callback;
 - (void)clearData;
+
+- (void)registerUsers:(NSArray*)users;
+- (void)registerUser:(User*)user;
+- (User *)lookupUser:(NSString*)userId;
 @end

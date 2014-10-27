@@ -66,13 +66,7 @@ enum : NSUInteger {
 - (void)startFetchUserList {
     [UserService findFriends:^(NSArray *objects, NSError *error) {
         if (objects) {
-            NSMutableArray *users = [NSMutableArray array];
-            for (AVUser *user in objects) {
-                if (![user isEqual:[AVUser currentUser]]) {
-                    [users addObject:user];
-                }
-            }
-            self.users = users;
+            self.users = [objects mutableCopy];
             [self.tableView reloadData];
         } else {
             NSLog(@"error:%@", error);

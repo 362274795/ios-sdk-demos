@@ -36,7 +36,6 @@ enum : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showMenuOnView:)];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -49,6 +48,7 @@ enum : NSUInteger {
     [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -107,7 +107,7 @@ enum : NSUInteger {
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *chatRoom = [[[CDSessionManager sharedInstance] chatRooms] objectAtIndex:indexPath.row];
-    CDChatRoomType type = [[chatRoom objectForKey:@"type"] integerValue];
+    CDMsgRoomType type = [[chatRoom objectForKey:@"type"] integerValue];
     NSString *otherid = [chatRoom objectForKey:@"otherid"];
     NSMutableString *nameString = [[NSMutableString alloc] init];
     if (type == CDChatRoomTypeGroup) {
@@ -121,7 +121,7 @@ enum : NSUInteger {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *chatRoom = [[[CDSessionManager sharedInstance] chatRooms] objectAtIndex:indexPath.row];
-    CDChatRoomType type = [[chatRoom objectForKey:@"type"] integerValue];
+    CDMsgRoomType type = [[chatRoom objectForKey:@"type"] integerValue];
     NSString *otherid = [chatRoom objectForKey:@"otherid"];
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
     controller.type = type;
@@ -189,7 +189,7 @@ enum : NSUInteger {
         NSData *data = [result dataUsingEncoding:NSUTF8StringEncoding];
         dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
         if (dict) {
-            CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
+            CDMsgRoomType type = [[dict objectForKey:@"type"] integerValue];
             NSString *otherId = [dict objectForKey:@"id"];
             CDChatConfirmController *controller = [[CDChatConfirmController alloc] init];
             controller.type = type;

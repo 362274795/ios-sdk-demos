@@ -12,4 +12,6 @@
 
 @property (retain) AVRelation *friends;
 
++(NSString*)curUserId;
+
 @end

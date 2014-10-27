@@ -11,5 +11,5 @@
 
 @interface CDChatConfirmController : CDBaseController
 @property (nonatomic, strong) NSString *otherId;
-@property (nonatomic) CDChatRoomType type;
+@property (nonatomic) CDMsgRoomType type;
 @end

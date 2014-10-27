@@ -16,4 +16,8 @@
     return @"_User";
 }
 
++(NSString*)curUserId{
+    return [User currentUser].objectId;
+}
+
 @end
