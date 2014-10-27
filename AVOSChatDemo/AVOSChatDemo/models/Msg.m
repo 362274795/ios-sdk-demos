@@ -38,14 +38,14 @@
 
 -(NSString*)getOtherId{
     NSString* curUserId=[User curUserId];
-    if(_roomType){
+    if(_roomType==CDMsgRoomTypeSingle){
         if([curUserId isEqualToString:_fromPeerId]){
             return _toPeerId;
         }else{
             return _fromPeerId;
         }
     }else{
-        return _toPeerId;
+        return _convid; // groupId
     }
 }
 

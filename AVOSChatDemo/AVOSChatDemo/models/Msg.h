@@ -10,8 +10,8 @@
 #import <AVOSCloud/AVOSCloud.h>
 
 typedef enum : NSUInteger {
-    CDMsgRoomTypeSingle = 1,
-    CDMsgRoomTypeGroup=0,
+    CDMsgRoomTypeSingle = 0,
+    CDMsgRoomTypeGroup=1,
 } CDMsgRoomType;
 
 typedef enum : NSUInteger{
@@ -26,7 +26,7 @@ typedef enum : NSUInteger{
     CDMsgStatusSendStart=0,
     CDMsgStatusSendSucceed=1,
     CDMsgStatusSendReceived=2,
-    CDMsgStatusSendFailed,
+    CDMsgStatusSendFailed=3,
 }CDMsgStatus;
 
 #define OWNER_ID @"ownerId"

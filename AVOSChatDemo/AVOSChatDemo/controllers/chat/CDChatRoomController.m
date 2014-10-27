@@ -16,6 +16,7 @@
     NSMutableArray *_timestampArray;
     NSDate *_lastTime;
     NSMutableDictionary *_loadedData;
+    CDSessionManager* sessionManager;
 }
 @property (nonatomic, strong) NSArray *messages;
 @end
@@ -30,13 +31,14 @@
     if ((self = [super init])) {
         self.hidesBottomBarWhenPushed = YES;
         _loadedData = [[NSMutableDictionary alloc] init];
+        sessionManager=[CDSessionManager sharedInstance];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if (self.type == CDChatRoomTypeGroup) {
+    if (self.type == CDMsgRoomTypeGroup) {
         NSString *title = @"group";
         if (self.group.groupId) {
             title = [NSString stringWithFormat:@"group:%@", self.group.groupId];
@@ -88,9 +90,9 @@
 - (void)showDetail:(id)sender {
     CDChatDetailController *controller = [[CDChatDetailController alloc] init];
     controller.type = self.type;
-    if (self.type == CDChatRoomTypeSingle) {
+    if (self.type == CDMsgRoomTypeSingle) {
         controller.otherId = self.otherId;
-    } else if (self.type == CDChatRoomTypeGroup) {
+    } else if (self.type == CDMsgRoomTypeGroup) {
         controller.otherId = self.group.groupId;
     }
     [self.navigationController pushViewController:controller animated:YES];
@@ -103,27 +105,26 @@
 
 #pragma mark - Messages view delegate
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text {
-    if (self.type == CDChatRoomTypeGroup) {
+    if (self.type == CDMsgRoomTypeGroup) {
         if (!self.group.groupId) {
             return;
         }
-        [[CDSessionManager sharedInstance] sendMessage:text toGroup:self.group.groupId];
-    } else {
-        [[CDSessionManager sharedInstance] sendMessage:text toPeerId:self.otherId];
+        [sessionManager sendMessage:text type:CDMsgTypeText toPeerId:nil group:self.group];
+    } else{
+        [sessionManager sendMessage:text type:CDMsgTypeText toPeerId:self.otherId group:nil];
     }
     [self refreshTimestampArray];
     [self finishSend];
 }
 
-- (void)sendAttachment:(AVFile *)object type:(NSString*)type{
-    if (self.type == CDChatRoomTypeGroup) {
+- (void)sendAttachment:(NSString *)objectId type:(NSString*)type{
+    if (self.type == CDMsgRoomTypeGroup) {
         if (!self.group.groupId) {
             return;
         }
-        [[CDSessionManager sharedInstance] sendAttachment:object type:type toGroup:self.group.groupId
-          ];
+        [sessionManager sendAttachment:objectId type:CDMsgTypeImage toPeerId:nil group:self.group];
     } else {
-        [[CDSessionManager sharedInstance] sendAttachment:object type:type toPeerId:self.otherId];
+        [sessionManager sendAttachment:objectId type:CDMsgTypeImage toPeerId:self.otherId group:nil];
     }
     [self refreshTimestampArray];
     [self finishSend];
@@ -221,7 +222,7 @@
 }
 
 - (BOOL)hasNameForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.type == CDChatRoomTypeGroup) {
+    if (self.type == CDMsgRoomTypeGroup) {
         return YES;
     }
     return NO;
@@ -295,15 +296,8 @@
 
 - (void)messageUpdated:(NSNotification *)notification {
     NSArray *messages = nil;
-    if (self.type == CDChatRoomTypeGroup) {
-        NSString *groupId = self.group.groupId;
-        if (!groupId) {
-            return;
-        }
-        messages = [[CDSessionManager sharedInstance] getMessagesForGroup:groupId];
-    } else {
-        messages = [[CDSessionManager sharedInstance] getMessagesForPeerId:self.otherId];
-    }
+    NSString* convid=[CDSessionManager getConvid:self.type otherId:self.otherId groupId:self.group.groupId];
+    messages = [sessionManager getMsgsForConvid:convid];
     self.messages = messages;
     [self refreshTimestampArray];
     [self.tableView reloadData];
@@ -311,7 +305,7 @@
 }
 
 - (void)sessionUpdated:(NSNotification *)notification {
-    if (self.type == CDChatRoomTypeGroup) {
+    if (self.type == CDMsgRoomTypeGroup) {
         NSString *title = @"group";
         if (self.group.groupId) {
             title = [NSString stringWithFormat:@"group:%@", self.group.groupId];

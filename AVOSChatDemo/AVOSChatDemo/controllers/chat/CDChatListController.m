@@ -61,7 +61,7 @@ enum : NSUInteger {
 - (void)addContactForGroup {
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
     [[CDSessionManager sharedInstance] startNewGroup:^(AVGroup *group, NSError *error) {
-        controller.type = CDChatRoomTypeGroup;
+        controller.type = CDMsgRoomTypeGroup;
         controller.group = group;
         [self.navigationController pushViewController:controller animated:YES];
     }];
@@ -110,7 +110,7 @@ enum : NSUInteger {
     CDMsgRoomType type = [[chatRoom objectForKey:@"type"] integerValue];
     NSString *otherid = [chatRoom objectForKey:@"otherid"];
     NSMutableString *nameString = [[NSMutableString alloc] init];
-    if (type == CDChatRoomTypeGroup) {
+    if (type == CDMsgRoomTypeGroup) {
         [nameString appendFormat:@"group:%@", otherid];
     } else {
         [nameString appendFormat:@"%@", otherid];
@@ -125,7 +125,7 @@ enum : NSUInteger {
     NSString *otherid = [chatRoom objectForKey:@"otherid"];
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
     controller.type = type;
-    if (type == CDChatRoomTypeGroup) {
+    if (type == CDMsgRoomTypeGroup) {
         AVGroup *group = [[CDSessionManager sharedInstance] joinGroup:otherid];
         controller.group = group;
         controller.otherId = otherid;

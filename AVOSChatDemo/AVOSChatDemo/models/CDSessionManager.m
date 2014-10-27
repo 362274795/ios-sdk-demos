@@ -75,7 +75,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     if (![_database tableExists:@"messages"]) {
         [_database executeUpdate:messagesTableSQL];
     }
-    [_session openWithPeerId:[AVUser currentUser].username];
+    [_session openWithPeerId:[self getPeerId:[User currentUser]]];
 
     FMResultSet *rs = [_database executeQuery:@"select * from messages group by convid order by time desc" ];
     NSArray *msgs=[self getMsgsByResultSet:rs];
@@ -164,7 +164,16 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     return result;
 }
 
--(Msg*)createAndSendMsg:(NSString*)toPeerId type:(CDMsgType)type content:(NSString*)content group:(AVGroup*)group{
++(NSString*)getConvid:(CDMsgRoomType)roomType otherId:(NSString*)otherId groupId:(NSString*)groupId{
+    if(roomType==CDMsgRoomTypeSingle){
+        NSString* curUserId=[User curUserId];
+        return [CDSessionManager convid:curUserId otherId:otherId];
+    }else{
+        return groupId;
+    }
+}
+
+-(Msg*)createAndSendMsg:(NSString*)objectId type:(CDMsgType)type content:(NSString*)content toPeerId:(NSString*)toPeerId group:(AVGroup*)group{
     Msg* msg=[[Msg alloc] init];
     msg.toPeerId=toPeerId;
     int64_t currentTime=(int64_t)CACurrentMediaTime()*1000;
@@ -176,15 +185,17 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     if(!group){
         msg.toPeerId=toPeerId;
         msg.roomType=CDMsgRoomTypeSingle;
-        msg.convid=[CDSessionManager convid:curUserId otherId:toPeerId];
     }else{
         msg.roomType=CDMsgRoomTypeGroup;
-        msg.toPeerId=group.groupId;
-        msg.convid=group.groupId;
     }
-    msg.objectId=[CDSessionManager uuid];
+    msg.convid=[CDSessionManager getConvid:msg.roomType otherId:msg.toPeerId groupId:group.groupId];
+    msg.objectId=objectId;
     msg.type=type;
     return [self sendMsg:group msg:msg];
+}
+
+-(Msg*)createAndSendMsg:(CDMsgType)type content:(NSString*)content toPeerId:(NSString*)toPeerId group:(AVGroup*)group{
+    return [self createAndSendMsg:[CDSessionManager uuid] type:type content:content toPeerId:toPeerId group:group];
 }
 
 -(AVSession*)getSession{
@@ -202,82 +213,52 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     return msg;
 }
 
-- (void)sendMessage:(NSString *)message toPeerId:(NSString *)peerId group:(AVGroup*)group{
-
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"dn"];
-    [dict setObject:@"text" forKey:@"type"];
-    [dict setObject:message forKey:@"message"];
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    AVMessage *messageObject = [AVMessage messageForPeerWithSession:_session toPeerId:peerId payload:payload];
-    [_session sendMessage:messageObject];
-    
-    NSString* type=@"text";
-    [self insertMessageToDBAndNotify:peerId type:type message:message];
+- (void)sendMessage:(NSString *)content type:(CDMsgType)type toPeerId:(NSString *)toPeerId group:(AVGroup*)group{
+    Msg* msg=[self createAndSendMsg:type content:content toPeerId:toPeerId group:group];
+    [self insertMessageToDBAndNotify:msg];
 }
 
-
-- (void)sendAttachment:(AVFile *)object type:(NSString*)type toPeerId:(NSString *)peerId {
-//    AVFile *file = [object objectForKey:type];
-    
-    NSDictionary *dict=[self createMsgDict:_session.peerId type:type message:object.objectId];
-    
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    AVMessage *messageObject = [AVMessage messageForPeerWithSession:_session toPeerId:peerId payload:payload];
-    [_session sendMessage:messageObject];
-    //    [_session sendMessage:payload isTransient:NO toPeerIds:@[peerId]];
-    [self insertMessageToDBAndNotify:peerId type:type message:object.objectId];
+-(NSString*)getFilesPath{
+    NSString* appPath=[[NSBundle mainBundle] resourcePath];
+    NSString* filesPath=[appPath stringByAppendingString:@"files/"];
+    NSFileManager *fileMan=[NSFileManager defaultManager];
+    NSError *error;
+    BOOL isDir=YES;
+    if([fileMan fileExistsAtPath:filesPath isDirectory:&isDir]==NO){
+        [fileMan createDirectoryAtPath:filesPath withIntermediateDirectories:YES attributes:nil error:&error];
+        if(error){
+            [NSException raise:@"error when create dir" format:@"error"];
+        }
+    }
+    return filesPath;
 }
 
-- (void )insertMessageToDBAndNotify:(NSString *)targetId type:(NSString *)type message:(NSString *)message {
-    NSDictionary *msgDict=[self insertSendMessageToDB:targetId type:type message:	message];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:msgDict];
+-(NSString*)getPathByObjectId:(NSString*)objectId{
+    return [[self getFilesPath] stringByAppendingString:objectId];
 }
 
-- (void)sendMessage:(NSString *)message toGroup:(NSString *)groupId {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:_session.peerId forKey:@"dn"];
-    [dict setObject:@"text" forKey:@"type"];
-    [dict setObject:message forKey:@"message"];
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    AVGroup *group = [AVGroup getGroupWithGroupId:groupId session:_session];
-    AVMessage *messageObject = [AVMessage messageForGroup:group payload:payload];
-    [group sendMessage:messageObject];
-
-    [self insertMessageToDBAndNotify:groupId type:@"text" message:message];
+- (void)sendAttachment:(NSString*)objectId type:(CDMsgType)type toPeerId:(NSString *)toPeerId group:(AVGroup*)group{
+    NSString* path=[self getPathByObjectId:objectId];
+    User* curUser=[User currentUser];
+    double time=[[NSDate date] timeIntervalSince1970];
+    NSMutableString *name=[[curUser username] mutableCopy];
+    [name appendFormat:@"%f",time];
+    AVFile *f=[AVFile fileWithName:name contentsAtPath:path];
+    [f saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if(error){
+        }else{
+            [self sendMessage:f.url type:type toPeerId:toPeerId group:group];
+        }
+    }];
 }
 
-- (NSDictionary*)createMsgDict:(NSString*)dn type:(NSString*)type message:(NSString*)message{
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:dn forKey:@"dn"];
-    [dict setObject:type forKey:@"type"];
-    [dict setObject:message forKey:@"message"];
-    return dict;
+- (void )insertMessageToDBAndNotify:(Msg*)msg{
+    [self insertMsgToDB:msg];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:nil];
 }
 
-- (void)sendAttachment:(AVFile *)object type:(NSString*)type toGroup:(NSString *)groupId {
-    NSDictionary *dict=[self createMsgDict:_session.peerId type:type message:object.objectId];
-    
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
-    NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    AVGroup *group = [AVGroup getGroupWithGroupId:groupId session:_session];
-    AVMessage *messageObject = [AVMessage messageForGroup:group payload:payload];
-    [group sendMessage:messageObject];
-    
-    [self insertMessageToDBAndNotify:groupId type:type message:object.objectId];
-
-}
-
-- (NSArray *)getMessagesForPeerId:(NSString *)peerId {
-    NSString *selfId = _session.peerId;
-    FMResultSet *rs = [_database executeQuery:@"select * from messages where (fromid=? and toid=?) or (fromid=? and toid=?)" withArgumentsInArray:@[selfId, peerId, peerId, selfId]];
+- (NSArray*)getMsgsForConvid:(NSString*)convid{
+    FMResultSet * rs=[_database executeQuery:@"select * from messages where convid=? order by timestamp desc" withArgumentsInArray:@[convid]];
     return [self getMsgsByResultSet:rs];
 }
 
@@ -341,26 +322,15 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 }
 
 -(void)dealReceiveMessage:(AVMessage*)avMsg group:(AVGroup*)group{
-    
+    Msg* msg=[Msg fromAVMessage:avMsg];
+    [self insertMessageToDBAndNotify:msg];
 }
 
 - (void)session:(AVSession *)session didReceiveMessage:(AVMessage *)message {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    NSLog(@"session:%@ message:%@ fromPeerId:%@", session.peerId, message, message.fromPeerId);
-    NSError *error;
-    NSData *data = [message.payload dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    NSLog(@"%@", jsonDict);
-    NSString *type = [jsonDict objectForKey:@"type"];
-    NSString *msg = [jsonDict objectForKey:@"message"];
-    NSDictionary *dict=[self insertMessageToDB:message.fromPeerId toId:session.peerId type:type timestamp:@(message.timestamp/1000) message:msg];
+    [self dealReceiveMessage:message group:nil];
     
-    BOOL exist = [self existsInChatRooms:CDMsgRoomTypeSingle targetId:message.fromPeerId];
-    if (!exist) {
-        [self addChatWithPeerId:message.fromPeerId];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:session userInfo:nil];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:session userInfo:dict];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:session userInfo:nil];
+    
     //    NSError *error;
     //    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
     //    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
@@ -419,24 +389,9 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 
 #pragma mark - AVGroupDelegate
 - (void)group:(AVGroup *)group didReceiveMessage:(AVMessage *)message {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    NSLog(@"group:%@ message:%@ fromPeerId:%@", group.groupId, message, message.fromPeerId);
-    NSError *error;
-    NSData *data = [message.payload dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    NSLog(@"%@", jsonDict);
-    
-    NSString *type = [jsonDict objectForKey:@"type"];
-    NSString *msg = [jsonDict objectForKey:@"message"];
-    NSDictionary *dict=[self insertMessageToDB:message.fromPeerId toId:group.groupId type:type timestamp:@(message.timestamp/1000) message:msg];
-    
-    BOOL exist = [self existsInChatRooms:CDMsgRoomTypeGroup targetId:group.groupId];
-    if (!exist) {
-        [self joinGroup:group.groupId];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
-    }
+    [self dealReceiveMessage:message group:group];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:group.session userInfo:dict];
 }
 
 - (void)group:(AVGroup *)group didReceiveEvent:(AVGroupEvent)event peerIds:(NSArray *)peerIds {
@@ -475,6 +430,10 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 
 -(User *)lookupUser:(NSString*)userId{
     return [_cachedUsers valueForKey:userId];
+}
+
+-(NSString*)getPeerId:(User*)user{
+    return user.objectId;
 }
 
 @end

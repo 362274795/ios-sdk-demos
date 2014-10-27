@@ -74,7 +74,7 @@
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
     [[CDSessionManager sharedInstance] addChatWithPeerId:self.user.username];
     controller.otherId = self.user.username;
-    controller.type = CDChatRoomTypeSingle;
+    controller.type = CDMsgRoomTypeSingle;
     self.tabBarController.selectedIndex = 0;
     [nav popToRootViewControllerAnimated:NO];
     

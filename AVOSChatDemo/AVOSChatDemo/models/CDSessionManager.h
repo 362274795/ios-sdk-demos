@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CDCommon.h"
+#import "Msg.h"
 
 @interface CDSessionManager : NSObject <AVSessionDelegate, AVSignatureDelegate, AVGroupDelegate>
 + (instancetype)sharedInstance;
@@ -18,15 +19,16 @@
 - (void)addChatWithPeerId:(NSString *)peerId;
 - (AVGroup *)joinGroup:(NSString *)groupId;
 - (void)startNewGroup:(AVGroupResultBlock)callback;
-- (void)sendMessage:(NSString *)message toPeerId:(NSString *)peerId;
-- (void)sendMessage:(NSString *)message toGroup:(NSString *)groupId;
-- (void)sendAttachment:(AVFile *)object type:(NSString*)type toPeerId:(NSString *)peerId;
-- (void)sendAttachment:(AVFile *)object type:(NSString*)type toGroup:(NSString *)groupId;
-- (NSArray *)getMessagesForPeerId:(NSString *)peerId;
-- (NSArray *)getMessagesForGroup:(NSString *)groupId;
+- (void)sendMessage:(NSString *)content type:(CDMsgType)type toPeerId:(NSString *)toPeerId group:(AVGroup*)group;
+- (void)sendAttachment:(NSString*)objectId type:(CDMsgType)type toPeerId:(NSString *)toPeerId group:(AVGroup*)group;
+
+- (NSArray*)getMsgsForConvid:(NSString*)convid;
 - (void)getHistoryMessagesForPeerId:(NSString *)peerId callback:(AVArrayResultBlock)callback;
 - (void)getHistoryMessagesForGroup:(NSString *)groupId callback:(AVArrayResultBlock)callback;
 - (void)clearData;
+
++(NSString*)getConvid:(CDMsgRoomType)roomType otherId:(NSString*)otherId groupId:(NSString*)groupId;
++(NSString*)convid:(NSString*)myId otherId:(NSString*)otherId;
 
 - (void)registerUsers:(NSArray*)users;
 - (void)registerUser:(User*)user;
