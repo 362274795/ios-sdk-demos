@@ -216,8 +216,9 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 -(Msg*)createAndSendMsg:(NSString*)objectId type:(CDMsgType)type content:(NSString*)content toPeerId:(NSString*)toPeerId group:(AVGroup*)group{
     Msg* msg=[[Msg alloc] init];
     msg.toPeerId=toPeerId;
-    int64_t currentTime=((int64_t)CACurrentMediaTime())*1000;
+    int64_t currentTime=[[NSDate date] timeIntervalSince1970]*1000;
     msg.timestamp=currentTime;
+    NSLog(@"%@",[[NSDate dateWithTimeIntervalSince1970:msg.timestamp/1000] description]);
     msg.content=content;
     NSString* curUserId=[User curUserId];
     msg.fromPeerId=curUserId;
@@ -258,6 +259,12 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     [self insertMessageToDBAndNotify:msg];
 }
 
+- (void)sendMessage:(NSString*)objectId content:(NSString *)content type:(CDMsgType)type toPeerId:(NSString *)toPeerId group:(AVGroup*)group{
+    Msg* msg=[self createAndSendMsg:objectId type:type content:content toPeerId:toPeerId group:group];
+    [self insertMessageToDBAndNotify:msg];
+}
+
+
 +(NSString*)getFilesPath{
     NSString* appPath=[NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString* filesPath=[appPath stringByAppendingString:@"/files/"];
@@ -286,8 +293,9 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     AVFile *f=[AVFile fileWithName:name contentsAtPath:path];
     [f saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if(error){
+            [Utils alert:[error localizedDescription]];
         }else{
-            [self sendMessage:f.url type:type toPeerId:toPeerId group:group];
+            [self sendMessage:objectId content:f.url type:type toPeerId:toPeerId group:group];
         }
     }];
 }
@@ -365,7 +373,27 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     NSLog(@"%s",__PRETTY_FUNCTION__);
     NSLog(@"payload=%@",avMsg.payload);
     Msg* msg=[Msg fromAVMessage:avMsg];
-    [self insertMessageToDBAndNotify:msg];
+    if(msg.type!=CDMsgTypeResponse){
+        if(msg.roomType==CDMsgRoomTypeSingle){
+        }
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            if(msg.type==CDMsgTypeImage){
+                NSString* path=[CDSessionManager getPathByObjectId:msg.objectId];
+                NSFileManager* fileMan=[NSFileManager defaultManager];
+                if([fileMan fileExistsAtPath:path]==NO){
+                    NSData* data=[[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:msg.content]];
+                    NSError* error;
+                    [data writeToFile:path options:NSDataWritingAtomic error:&error];
+                    if(error==nil){
+                    }else{
+                        NSLog(@"error when download file");
+                        return ;
+                    }
+                }
+            }
+            [self insertMessageToDBAndNotify:msg];
+        });
+    }
 }
 
 - (void)session:(AVSession *)session didReceiveMessage:(AVMessage *)message {

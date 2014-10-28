@@ -11,4 +11,5 @@
 @interface Utils : NSObject
 +(void)alert:(NSString*)msg;
 +(NSString*)md5:(NSString*)s;
++(void)alertError:(NSError*)error;
 @end

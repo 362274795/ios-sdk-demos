@@ -70,16 +70,10 @@
 #pragma mark - Actions
 
 -(void)startChat:(id)sender {
-    CDBaseNavigationController *nav = self.tabBarController.childViewControllers.firstObject;
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
-    [[CDSessionManager sharedInstance] watchPeerId:self.user.username];
     controller.chatUser = self.user;
     controller.type = CDMsgRoomTypeSingle;
-    self.tabBarController.selectedIndex = 0;
-    [nav popToRootViewControllerAnimated:NO];
-    
-    [self.tabBarController.childViewControllers.firstObject pushViewController:controller animated:YES];
-    [self.navigationController popToRootViewControllerAnimated:NO];
+    [self.navigationController pushViewController:controller animated:YES];
 
 }
 

@@ -17,6 +17,10 @@
     [alertView show];
 }
 
++(void)alertError:(NSError*)error{
+    [Utils alert:[error localizedDescription]];
+}
+
 +(NSString*)md5:(NSString*)s{
     const char *ptr = [s UTF8String];
     unsigned char md5Buffer[CC_MD5_DIGEST_LENGTH];

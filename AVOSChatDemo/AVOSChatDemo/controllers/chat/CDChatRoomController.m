@@ -11,6 +11,7 @@
 #import "CDChatDetailController.h"
 #import "QBImagePickerController.h"
 #import "UIImage+Resize.h"
+#import "Utils.h"
 
 @interface CDChatRoomController () <JSMessagesViewDelegate, JSMessagesViewDataSource, QBImagePickerControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate> {
     NSMutableDictionary *_loadedData;
@@ -250,18 +251,23 @@
 
 - (id)dataForRowAtIndexPath:(NSIndexPath *)indexPath{
     Msg *msg=[self.messages objectAtIndex:indexPath.row];
+    if(msg.type==CDMsgTypeText){
+        //return nil;
+    }
     UIImage* image = [_loadedData objectForKey:msg.objectId];
     if (image) {
         return image;
     } else {
-        Msg* msg=[self.messages objectAtIndex:indexPath.row];
         NSString* path=[CDSessionManager getPathByObjectId:msg.objectId];
         NSFileManager* fileMan=[NSFileManager defaultManager];
+        NSLog(@"path=%@",path);
         if([fileMan fileExistsAtPath:path]){
             NSData* data=[fileMan contentsAtPath:path];
-            [_loadedData setObject:data forKey:msg.objectId];
             UIImage* image=[UIImage imageWithData:data];
             [_loadedData setObject:image forKey:msg.objectId];
+        }else{
+            //[Utils alert:@"image file does not exist"];
+            NSLog(@"does not exists image file");
         }
         return image;
     }
@@ -370,8 +376,14 @@
 -(void)sendImage:(NSData*)imageData{
     NSString* objectId=[CDSessionManager uuid];
     NSString* path=[CDSessionManager getPathByObjectId:objectId];
-    [imageData writeToFile:path atomically:NO];
-    [self sendAttachment:objectId];
+    NSError* error;
+    [imageData writeToFile:path options:NSDataWritingAtomic error:&error];
+    NSLog(@" save path=%@",path);
+    if(error==nil){
+        [self sendAttachment:objectId];
+    }else{
+        [Utils alert:@"write image to file error"];
+    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
