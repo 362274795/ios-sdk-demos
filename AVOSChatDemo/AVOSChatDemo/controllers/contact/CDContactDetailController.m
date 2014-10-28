@@ -72,7 +72,7 @@
 -(void)startChat:(id)sender {
     CDBaseNavigationController *nav = self.tabBarController.childViewControllers.firstObject;
     CDChatRoomController *controller = [[CDChatRoomController alloc] init];
-    [[CDSessionManager sharedInstance] addChatWithPeerId:self.user.username];
+    [[CDSessionManager sharedInstance] watchPeerId:self.user.username];
     controller.chatUser = self.user;
     controller.type = CDMsgRoomTypeSingle;
     self.tabBarController.selectedIndex = 0;

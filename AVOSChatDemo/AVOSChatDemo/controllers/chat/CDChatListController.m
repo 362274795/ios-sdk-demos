@@ -41,7 +41,12 @@ enum : NSUInteger {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.tableView reloadData];
+    [[CDSessionManager sharedInstance] findConversations:^(NSArray *objects, NSError *error) {
+        if(error){
+        }else{
+           [self.tableView reloadData];
+        }
+    }];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionUpdated:) name:NOTIFICATION_SESSION_UPDATED object:nil];
 }
 

@@ -14,4 +14,5 @@
 +(void)findFriends:(AVArrayResultBlock)callback;
 +(void)findUsers:(NSString*)partName withBlock:(AVArrayResultBlock)block;
 +(NSString*)getPeerId:(User*)user;
++(void)findUsers:(NSArray*)userIds callback:(AVArrayResultBlock)callback;
 @end

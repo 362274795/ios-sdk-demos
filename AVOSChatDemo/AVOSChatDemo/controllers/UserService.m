@@ -33,4 +33,12 @@
     [q whereKey:@"objectId" notEqualTo:curUser.objectId];
     [q findObjectsInBackgroundWithBlock:block];
 }
+
++(void)findUsers:(NSArray*)userIds callback:(AVArrayResultBlock)callback{
+    AVQuery *q=[User query];
+    [q setCachePolicy:kAVCachePolicyNetworkElseCache];
+    [q whereKey:@"objectId" containedIn:userIds];
+    [q findObjectsInBackgroundWithBlock:callback];
+}
+
 @end

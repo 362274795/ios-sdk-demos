@@ -16,7 +16,7 @@
     FMDatabase *_database;
     AVSession *_session;
     NSMutableArray *_chatRooms;
-    NSDictionary *_cachedUsers;
+    NSMutableDictionary *_cachedUsers;
 }
 
 @end
@@ -56,7 +56,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 - (instancetype)init {
     if ((self = [super init])) {
         _chatRooms = [[NSMutableArray alloc] init];
-        _cachedUsers=[[NSDictionary alloc] init];
+        _cachedUsers=[[NSMutableDictionary alloc] init];
         
         AVSession *session = [[AVSession alloc] init];
         session.sessionDelegate = self;
@@ -74,28 +74,64 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 //if type is image ,message is attment.objectId
 
 - (void)commonInit {
-    NSLog(@"convid=%@",[CDSessionManager convid:@"u1234" otherId:@"u0988"]);
     if (![_database tableExists:@"messages"]) {
         [_database executeUpdate:messagesTableSQL];
     }
-    [_session openWithPeerId:[self getPeerId:[User currentUser]]];
+    initialized = YES;
+}
 
-    FMResultSet *rs = [_database executeQuery:@"select * from messages group by convid order by time desc" ];
-    NSArray *msgs=[self getMsgsByResultSet:rs];
+-(void)openSession{
+    [_session openWithPeerId:[User curUserId]];
+}
+
+-(void)closeSession{
+    [_session close];
+}
+
+-(void)cacheMsgs:(NSArray*)msgs callback:(AVArrayResultBlock)callback{
+    NSMutableArray* uncacheUserIds=[[NSMutableArray alloc] init];
     for(Msg* msg in msgs){
         NSString* otherId=[msg getOtherId];
-        ChatRoom* chatRoom=[[ChatRoom alloc] init];
-        chatRoom.roomType=msg.roomType;
         if(msg.roomType==CDMsgRoomTypeSingle){
-            User* other=[self lookupUser:otherId];
-            chatRoom.chatUser=other;
-        }else{
-            AVGroup *group = [AVGroup getGroupWithGroupId:otherId session:_session];
-            chatRoom.group=group;
+            if([self lookupUser:otherId]==nil){
+                [uncacheUserIds addObject:otherId];
+            }
         }
-        [_chatRooms addObject:chatRoom];
     }
-    initialized = YES;
+    [UserService findUsers:uncacheUserIds callback:^(NSArray *objects, NSError *error) {
+        if(objects){
+            [self registerUsers:objects];
+            callback(objects,error);
+        }else{
+            callback(objects,error);
+        }
+    }];
+}
+
+-(void)findConversations:(AVArrayResultBlock)callback{
+    FMResultSet *rs = [_database executeQuery:@"select * from messages group by convid order by timestamp desc" ];
+    NSArray *msgs=[self getMsgsByResultSet:rs];
+    [self cacheMsgs:msgs callback:^(NSArray *objects, NSError *error) {
+        if(error){
+            callback(objects,error);
+        }else{
+            [_chatRooms removeAllObjects];
+            for(Msg* msg in msgs){
+                NSString* otherId=[msg getOtherId];
+                ChatRoom* chatRoom=[[ChatRoom alloc] init];
+                chatRoom.roomType=msg.roomType;
+                if(msg.roomType==CDMsgRoomTypeSingle){
+                    User* other=[self lookupUser:otherId];
+                    chatRoom.chatUser=other;
+                }else{
+                    AVGroup *group = [AVGroup getGroupWithGroupId:otherId session:_session];
+                    chatRoom.group=group;
+                }
+                [_chatRooms addObject:chatRoom];
+            }
+            callback(_chatRooms,error);
+        }
+    }];
 }
 
 - (void)clearData {
@@ -109,8 +145,12 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     return _chatRooms;
 }
 
-- (void)addChatWithPeerId:(NSString *)peerId {
+- (void)watchPeerId:(NSString *)peerId {
     [_session watchPeerIds:@[peerId]];
+}
+
+-(void)unwatchPeerId:(NSString*)peerId{
+    [_session unwatchPeerIds:@[peerId]];
 }
 
 - (AVGroup *)joinGroup:(NSString *)groupId {
@@ -258,7 +298,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 }
 
 - (NSArray*)getMsgsForConvid:(NSString*)convid{
-    FMResultSet * rs=[_database executeQuery:@"select * from messages where convid=? order by timestamp desc" withArgumentsInArray:@[convid]];
+    FMResultSet * rs=[_database executeQuery:@"select * from messages where convid=? order by timestamp" withArgumentsInArray:@[convid]];
     return [self getMsgsByResultSet:rs];
 }
 
@@ -322,6 +362,8 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 }
 
 -(void)dealReceiveMessage:(AVMessage*)avMsg group:(AVGroup*)group{
+    NSLog(@"%s",__PRETTY_FUNCTION__);
+    NSLog(@"payload=%@",avMsg.payload);
     Msg* msg=[Msg fromAVMessage:avMsg];
     [self insertMessageToDBAndNotify:msg];
 }
@@ -374,11 +416,11 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 
 - (void)session:(AVSession *)session messageSendFinished:(AVMessage *)message {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-    NSLog(@"session:%@ message:%@ toPeerId:%@", session.peerId, message, message.toPeerId);
+    NSLog(@"session:%@ message:%@ toPeerId:%@", session.peerId, message.payload, message.toPeerId);
 }
 
 - (void)session:(AVSession *)session didReceiveStatus:(AVPeerStatus)status peerIds:(NSArray *)peerIds {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    NSLog(@"%s", __PRETTY_FUNCTION__); 
     NSLog(@"session:%@ peerIds:%@ status:%@", session.peerId, peerIds, status==AVPeerStatusOffline?@"offline":@"online");
 }
 
@@ -425,7 +467,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 }
 
 -(void) registerUser:(User*)user{
-    [_cachedUsers setValue:user forKey:user.objectId];
+    [_cachedUsers setObject:user forKey:user.objectId];
 }
 
 -(User *)lookupUser:(NSString*)userId{

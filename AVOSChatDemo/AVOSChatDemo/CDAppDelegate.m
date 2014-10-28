@@ -14,6 +14,7 @@
 #import "CDChatListController.h"
 #import "CDContactListController.h"
 #import "CDProfileController.h"
+#import "CDSessionManager.h"
 
 @implementation CDAppDelegate
 
@@ -39,7 +40,7 @@
     }
     [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
                                                            [UIColor whiteColor], NSForegroundColorAttributeName, [UIFont boldSystemFontOfSize:17], NSFontAttributeName, nil]];
-    if ([AVUser currentUser]) {
+    if ([User currentUser]) {
         [self toMain];
     } else {
         [self toLogin];
@@ -54,6 +55,7 @@
     } else {
         [application performSelector:@selector(registerForRemoteNotifications)];
     }
+    setenv("LOG_CURL", "YES", 0);
     return YES;
 }
 
@@ -129,6 +131,7 @@
     tab.selectedIndex=1;
     
     self.window.rootViewController = tab;
+    [[CDSessionManager sharedInstance] openSession];
 }
 
 @end

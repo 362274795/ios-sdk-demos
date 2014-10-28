@@ -65,7 +65,7 @@
     if (self.type == CDMsgRoomTypeGroup) {
         [[CDSessionManager sharedInstance] joinGroup:self.otherId];
     } else if (self.type == CDMsgRoomTypeSingle) {
-        [[CDSessionManager sharedInstance] addChatWithPeerId:self.otherId];
+        [[CDSessionManager sharedInstance] watchPeerId:self.otherId];
     }
     [self.navigationController popViewControllerAnimated:YES];
 }
