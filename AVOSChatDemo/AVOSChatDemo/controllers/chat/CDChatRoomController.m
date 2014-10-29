@@ -58,7 +58,12 @@
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    NSNotificationCenter* center=[NSNotificationCenter defaultCenter];
+    [center removeObserver:self name:NOTIFICATION_MESSAGE_UPDATED object:nil];
+    [center removeObserver:self name:NOTIFICATION_SESSION_UPDATED object:nil];
+}
+
+-(void)dealloc{
     if(self.type==CDMsgRoomTypeSingle){
         [sessionManager unwatchPeerId:self.chatUser.objectId];
     }
@@ -116,11 +121,17 @@
 - (JSBubbleMediaType)messageMediaTypeForRowAtIndexPath:(NSIndexPath *)indexPath {
     Msg* msg=[self.messages objectAtIndex:indexPath.row];
     CDMsgType type = msg.type;
+    // NSLog(@"type=%d",type);
     if (type ==CDMsgTypeText) {
         return JSBubbleMediaTypeText;
     } else if (type==CDMsgTypeImage) {
         return JSBubbleMediaTypeImage;
+    }else if(type==CDMsgTypeAudio){
+        return JSBubbleMediaTypeText;
+    }else if(type==CDMsgTypeLocation){
+        return JSBubbleMediaTypeText;
     }
+    [NSException raise:@"unknown message type" format:nil];
     return JSBubbleMediaTypeText;
 
 //    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
@@ -210,6 +221,9 @@
 //        return [[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"];
 //    }
     Msg* msg=[self.messages objectAtIndex:indexPath.row];
+    if(msg.type==CDMsgTypeAudio){
+        return @"语音";
+    }
     return msg.content;
 }
 
@@ -260,14 +274,14 @@
     } else {
         NSString* path=[CDSessionManager getPathByObjectId:msg.objectId];
         NSFileManager* fileMan=[NSFileManager defaultManager];
-        NSLog(@"path=%@",path);
+        //NSLog(@"path=%@",path);
         if([fileMan fileExistsAtPath:path]){
             NSData* data=[fileMan contentsAtPath:path];
             UIImage* image=[UIImage imageWithData:data];
             [_loadedData setObject:image forKey:msg.objectId];
         }else{
             //[Utils alert:@"image file does not exist"];
-            NSLog(@"does not exists image file");
+           // NSLog(@"does not exists image file");
         }
         return image;
     }
@@ -344,16 +358,19 @@
 
 - (void)qb_imagePickerController:(QBImagePickerController *)imagePickerController didSelectAsset:(ALAsset *)asset
 {
+    NSLog(@"%s",__PRETTY_FUNCTION__);
     NSLog(@"*** qb_imagePickerController:didSelectAsset:");
     NSLog(@"%@", asset);
     ALAssetRepresentation *representation = [asset defaultRepresentation];
-    Byte *buffer = (Byte*)malloc((unsigned long)representation.size);
-    
-    // add error checking here
-    NSUInteger buffered = [representation getBytes:buffer fromOffset:0.0 length:(NSUInteger)representation.size error:nil];
-    NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-    if (data) {
-        [self sendImage:data];
+//    Byte *buffer = (Byte*)malloc((unsigned long)representation.size);
+//    
+//    // add error checking here
+//    NSUInteger buffered = [representation getBytes:buffer fromOffset:0.0 length:(NSUInteger)representation.size error:nil];
+//    NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+//
+    UIImage* image=[UIImage imageWithCGImage:[representation fullResolutionImage]];
+    if (image) {
+        [self sendImage:image];
     }
     [self dismissImagePickerController];
 }
@@ -373,7 +390,10 @@
     [self dismissImagePickerController];
 }
 
--(void)sendImage:(NSData*)imageData{
+-(void)sendImage:(UIImage*)image{
+    UIImage *scaledImage = [image resizedImageToFitInSize:CGSizeMake(1080, 1920) scaleIfSmaller:NO];
+    NSData *imageData = UIImageJPEGRepresentation(scaledImage, 0.6);
+    
     NSString* objectId=[CDSessionManager uuid];
     NSString* path=[CDSessionManager getPathByObjectId:objectId];
     NSError* error;
@@ -387,14 +407,13 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    NSLog(@"%s",__PRETTY_FUNCTION__);
     UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     if (!image) {
         image = [info objectForKey:UIImagePickerControllerOriginalImage];
     }
     if (image) {
-        UIImage *scaledImage = [image resizedImageToFitInSize:CGSizeMake(1080, 1920) scaleIfSmaller:NO];
-        NSData *imageData = UIImageJPEGRepresentation(scaledImage, 0.6);
-        [self sendImage:imageData];
+        [self sendImage:image];
     }
    [self dismissImagePickerController];
 }

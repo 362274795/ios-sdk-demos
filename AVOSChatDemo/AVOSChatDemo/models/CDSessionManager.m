@@ -218,7 +218,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     msg.toPeerId=toPeerId;
     int64_t currentTime=[[NSDate date] timeIntervalSince1970]*1000;
     msg.timestamp=currentTime;
-    NSLog(@"%@",[[NSDate dateWithTimeIntervalSince1970:msg.timestamp/1000] description]);
+    //NSLog(@"%@",[[NSDate dateWithTimeIntervalSince1970:msg.timestamp/1000] description]);
     msg.content=content;
     NSString* curUserId=[User curUserId];
     msg.fromPeerId=curUserId;
@@ -319,8 +319,8 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     int64_t timestamp=[timestampText longLongValue];
     NSString* content=[rs stringForColumn:CONTENT];
     CDMsgRoomType roomType=[rs intForColumn:ROOM_TYPE];
-    int type=[rs intForColumn:TYPE];
-    int status=[rs intForColumn:STATUS];
+    CDMsgType type=[rs intForColumn:TYPE];
+    CDMsgStatus status=[rs intForColumn:STATUS];
     
     Msg* msg=[Msg createMsg:objectId fromPeerId:fromid toPeerId:toid timestamp:timestamp content:content type:type status:status roomType:roomType convid:convid];
     return msg;
@@ -391,7 +391,9 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
                     }
                 }
             }
-            [self insertMessageToDBAndNotify:msg];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self insertMessageToDBAndNotify:msg];
+            });
         });
     }
 }
