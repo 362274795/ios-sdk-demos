@@ -302,6 +302,10 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
 
 - (void )insertMessageToDBAndNotify:(Msg*)msg{
     [self insertMsgToDB:msg];
+    [self postMessageUpdateNotify];
+}
+
+-(void)postMessageUpdateNotify{
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:nil];
 }
 
@@ -369,12 +373,27 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     NSLog(@"session:%@", session.peerId);
 }
 
+-(void)sendResponseMsg:(Msg*)msg{
+    Msg* resMsg=[[Msg alloc] init];
+    resMsg.type=CDMsgTypeResponse;
+    resMsg.toPeerId=msg.fromPeerId;
+    resMsg.fromPeerId=[User curUserId];
+    resMsg.convid=[CDSessionManager convid:msg.fromPeerId otherId:[User curUserId]];
+    resMsg.roomType=CDMsgRoomTypeSingle;
+    resMsg.status=CDMsgStatusSendStart;
+    resMsg.content=[NSString stringWithFormat:@"%lld",msg.timestamp];
+    resMsg.objectId=msg.objectId;
+    [self sendMsg:nil msg:resMsg];
+    NSLog(@"send response msg");
+}
+
 -(void)dealReceiveMessage:(AVMessage*)avMsg group:(AVGroup*)group{
     NSLog(@"%s",__PRETTY_FUNCTION__);
     NSLog(@"payload=%@",avMsg.payload);
     Msg* msg=[Msg fromAVMessage:avMsg];
     if(msg.type!=CDMsgTypeResponse){
         if(msg.roomType==CDMsgRoomTypeSingle){
+            [self sendResponseMsg:msg];
         }
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             if(msg.type==CDMsgTypeImage){
@@ -395,7 +414,15 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
                 [self insertMessageToDBAndNotify:msg];
             });
         });
+    }else{
+        [self updateStatusAndTimestamp:msg];
+        [self postMessageUpdateNotify];
     }
+}
+
+-(void)updateStatusAndTimestamp:(Msg*)msg{
+    NSLog(@"%s",__PRETTY_FUNCTION__);
+    [_database executeUpdate:@"update messages set status=?,timestamp=? where objectId=?" withArgumentsInArray:@[@(CDMsgStatusSendReceived),msg.content,msg.objectId]];
 }
 
 - (void)session:(AVSession *)session didReceiveMessage:(AVMessage *)message {

@@ -224,7 +224,9 @@
     if(msg.type==CDMsgTypeAudio){
         return @"语音";
     }
-    return msg.content;
+    NSMutableString* content=[msg.content mutableCopy];
+    //[content appendFormat:@"\n%@",[msg getStatusDesc]];
+    return content;
 }
 
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath {

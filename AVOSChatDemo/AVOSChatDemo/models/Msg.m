@@ -111,4 +111,18 @@
     return [NSDate dateWithTimeIntervalSince1970:timestamp/1000];
 }
 
+-(NSString*)getStatusDesc{
+    switch (status) {
+        case CDMsgStatusSendStart:
+            return @"发送中";
+        case CDMsgStatusSendFailed:
+            return @"发送失败";
+        case CDMsgStatusSendReceived:
+            return @"已接收";
+        case CDMsgStatusSendSucceed:
+            return @"已发送";
+    }
+    [NSException raise:@"invalid status" format:nil];
+}
+
 @end
