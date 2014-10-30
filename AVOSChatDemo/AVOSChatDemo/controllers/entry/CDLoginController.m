@@ -219,6 +219,9 @@
         } else {
             //Something bad has ocurred
             NSString *errorString = [[error userInfo] objectForKey:@"error"];
+            if(errorString==nil){
+                errorString=[error localizedDescription];
+            }
             UIAlertView *errorAlertView = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [errorAlertView show];
         }

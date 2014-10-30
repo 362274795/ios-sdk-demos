@@ -309,7 +309,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:nil userInfo:nil];
 }
 
-- (NSArray*)getMsgsForConvid:(NSString*)convid{
+- (NSMutableArray*)getMsgsForConvid:(NSString*)convid{
     FMResultSet * rs=[_database executeQuery:@"select * from messages where convid=? order by timestamp" withArgumentsInArray:@[convid]];
     return [self getMsgsByResultSet:rs];
 }
@@ -330,7 +330,7 @@ static NSString *messagesTableSQL=@"create table if not exists messages (id inte
     return msg;
 }
 
--(NSArray*)getMsgsByResultSet:(FMResultSet*)rs{
+-(NSMutableArray*)getMsgsByResultSet:(FMResultSet*)rs{
     NSMutableArray *result = [NSMutableArray array];
     while ([rs next]) {
         Msg *msg=[self getMsgByResultSet :rs];

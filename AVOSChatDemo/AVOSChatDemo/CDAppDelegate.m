@@ -131,6 +131,7 @@
     tab.selectedIndex=1;
     
     self.window.rootViewController = tab;
+    [[CDSessionManager sharedInstance] registerUser:[User currentUser]];
     [[CDSessionManager sharedInstance] openSession];
 }
 

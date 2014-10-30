@@ -13,6 +13,7 @@
 #import "CDAddFriendController.h"
 #import "CDBaseNavigationController.h"
 #import "CDNewFriendTableViewController.h"
+#import "CDSessionManager.h"
 
 enum : NSUInteger {
     kTagNameLabel = 10000,
@@ -67,6 +68,7 @@ enum : NSUInteger {
     [UserService findFriends:^(NSArray *objects, NSError *error) {
         if (objects) {
             self.users = [objects mutableCopy];
+            [[CDSessionManager sharedInstance] registerUsers:self.users];
             [self.tableView reloadData];
         } else {
             NSLog(@"error:%@", error);

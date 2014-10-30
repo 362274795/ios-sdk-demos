@@ -10,15 +10,14 @@
 #import "CDSessionManager.h"
 #import "CDChatRoomController.h"
 #import "CDPopMenu.h"
-#import "ZXingWidgetController.h"
-#import "MultiFormatReader.h"
 #import "CDChatConfirmController.h"
 #import "ChatRoom.h"
 
 enum : NSUInteger {
     kTagNameLabel = 10000,
 };
-@interface CDChatListController () <ZXingDelegate> {
+
+@interface CDChatListController ()  {
     CDPopMenu *_popMenu;
 }
 
@@ -77,19 +76,8 @@ enum : NSUInteger {
 }
 
 - (void)addScan {
-    ZXingWidgetController *widController =
-    [[ZXingWidgetController alloc] initWithDelegate:self showCancel:YES OneDMode:NO];
-    
-    NSMutableSet *readers = [[NSMutableSet alloc ] init];
-    
-    MultiFormatReader* reader = [[MultiFormatReader alloc] init];
-    [readers addObject:reader];
-    
-    widController.readers = readers;
 
-    [self presentViewController:widController animated:YES completion:^{
-        
-    }];
+    NSMutableSet *readers = [[NSMutableSet alloc ] init];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -186,7 +174,7 @@ enum : NSUInteger {
 
 #pragma mark - ZXingDelegateMethods
 
-- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result {
+-(void)zxingScanResult:(NSString*)result{
     NSLog(@"%s %@", __PRETTY_FUNCTION__, result);
     [self dismissViewControllerAnimated:NO completion:^{
         NSDictionary *dict = nil;
@@ -203,13 +191,6 @@ enum : NSUInteger {
         }
     }];
     // [self dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
-    [self dismissViewControllerAnimated:NO completion:^{
-        
-    }];
-    // [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)sessionUpdated:(NSNotification *)notification {

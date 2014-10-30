@@ -8,11 +8,13 @@
 
 #import "CDBaseController.h"
 #import "CDCommon.h"
-#import "JSMessagesViewController.h"
+#import "JSQMessages.h"
 #import "CDSessionManager.h"
 
-@interface CDChatRoomController : JSMessagesViewController
+@interface CDChatRoomController : JSQMessagesViewController
+
 @property (nonatomic, strong) User *chatUser;
 @property (nonatomic) CDMsgRoomType type;
 @property (nonatomic, strong) AVGroup *group;
+
 @end
