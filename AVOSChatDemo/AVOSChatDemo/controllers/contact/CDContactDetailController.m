@@ -70,11 +70,13 @@
 #pragma mark - Actions
 
 -(void)startChat:(id)sender {
-    CDChatRoomController *controller = [[CDChatRoomController alloc] init];
+    CDChatRoomController *controller = [CDChatRoomController messagesViewController];
     controller.chatUser = self.user;
     controller.type = CDMsgRoomTypeSingle;
-    [self.navigationController pushViewController:controller animated:YES];
-
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentViewController:nc animated:YES completion:nil];
+    
+    //[self.navigationController pushViewController:controller animated:YES];
 }
 
 @end

@@ -23,21 +23,15 @@
 
 @implementation CDChatRoomController
 
-- (instancetype)init {
-    if ((self = [super init])) {
-        self.hidesBottomBarWhenPushed = YES;
-        _loadedData = [[NSMutableDictionary alloc] init];
-        sessionManager=[CDSessionManager sharedInstance];
-    }
-    return self;
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageUpdated:) name:NOTIFICATION_MESSAGE_UPDATED object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionUpdated:) name:NOTIFICATION_SESSION_UPDATED object:nil];
-    [self messageUpdated:nil];
 //    [AVAnalytics event:@"likebutton" attributes:@{@"source":@{@"view": @"week"}, @"do":@"unfollow"}];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [self messageUpdated:nil];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -243,8 +237,7 @@
 
 /**
  *  Override point for customization.
- *
- *  Customize your view.
+ * *  Customize your view.
  *  Look at the properties on `JSQMessagesViewController` and `JSQMessagesCollectionView` to see what is possible.
  *
  *  Customize your layout.
@@ -253,6 +246,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _loadedData = [[NSMutableDictionary alloc] init];
+    sessionManager=[CDSessionManager sharedInstance];
     if (self.type == CDMsgRoomTypeGroup) {
         NSString *title = @"group";
         if (self.group.groupId) {
@@ -312,7 +307,7 @@
     if(msg.type==CDMsgTypeText){
         copyMessage=[JSQTextMessage messageWithSenderId:fromUser.objectId displayName:fromUser.username text:msg.content];
     }else{
-        id<JSQMessageData> messageData;
+        id<JSQMessageMediaData> messageData;
         if(msg.type==CDMsgTypeImage){
             JSQPhotoMediaItem *photoItem=[[JSQPhotoMediaItem alloc] init];
             photoItem.appliesMediaViewMaskAsOutgoing=NO;
@@ -321,6 +316,7 @@
         }
         copyMessage=[JSQMediaMessage messageWithSenderId:fromUser.objectId displayName:fromUser.username media:messageData];
     }
+    assert(copyMessage!=nil);
     return copyMessage;
 }
 
@@ -607,6 +603,13 @@
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    if (indexPath.item % 3 == 0) {
+        JSQMessage *message = [self getJSQMessageAtPos:indexPath.row];
+        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+    }
+    
+    
     return nil;
 }
 
@@ -651,11 +654,12 @@
         
         cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
                                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+    }else{
+        
     }
     
     return cell;
 }
-
 
 
 #pragma mark - JSQMessages collection view flow layout delegate
