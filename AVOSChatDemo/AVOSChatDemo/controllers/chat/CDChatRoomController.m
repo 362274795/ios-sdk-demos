@@ -18,7 +18,7 @@
     CDSessionManager* sessionManager;
 }
 
-@property (nonatomic, strong) NSMutableArray *messages;
+
 @end
 
 @implementation CDChatRoomController
@@ -266,14 +266,26 @@
     self.senderId = curUser.objectId;
     self.senderDisplayName = curUser.username;
     
-
-    //self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
-    
-    self.showLoadEarlierMessagesHeader = YES;
+    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+    self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
 
+    self.showLoadEarlierMessagesHeader = NO;
+    
+    JSQMessagesBubbleImageFactory *bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
+    
+    self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+    self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
+   
+    UIBarButtonItem *backBtn=[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStyleBordered target:nil action:@selector(backPressed:)];
+    self.navigationItem.leftBarButtonItem = backBtn;
    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showDetail:)];
+}
+
+-(void)backPressed:(id)sender{
+    //[self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(UIImage*)getImageByMsg:(Msg*)msg{
@@ -303,6 +315,7 @@
 
 -(JSQMessage*)getJSQMessageByMsg:(Msg*)msg{
     User* fromUser=[sessionManager lookupUser:msg.fromPeerId];
+    User* curUser=[User currentUser];
     JSQMessage* copyMessage;
     if(msg.type==CDMsgTypeText){
         copyMessage=[JSQTextMessage messageWithSenderId:fromUser.objectId displayName:fromUser.username text:msg.content];
@@ -310,13 +323,15 @@
         id<JSQMessageMediaData> messageData;
         if(msg.type==CDMsgTypeImage){
             JSQPhotoMediaItem *photoItem=[[JSQPhotoMediaItem alloc] init];
-            photoItem.appliesMediaViewMaskAsOutgoing=NO;
+            BOOL outgoing=[curUser.objectId isEqualToString:fromUser.objectId];
+            photoItem.appliesMediaViewMaskAsOutgoing=outgoing;
             photoItem.image=[self getImageByMsg:msg];
             messageData=photoItem;
+        }else{
+            [NSException raise:@"invalid type" format:nil];
         }
         copyMessage=[JSQMediaMessage messageWithSenderId:fromUser.objectId displayName:fromUser.username media:messageData];
     }
-    assert(copyMessage!=nil);
     return copyMessage;
 }
 
@@ -519,10 +534,10 @@
     JSQMessage *message = [self getJSQMessageAtPos:indexPath.row];
     
     if ([message.senderId isEqualToString:self.senderId]) {
-        return nil;
+        return self.outgoingBubbleImageData;
     }
     
-    return nil;
+    return self.incomingBubbleImageData;
 }
 
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -569,9 +584,9 @@
      *
      *  Show a timestamp for every 3rd message
      */
-    if (indexPath.item % 3 == 0) {
-        JSQMessage *message = [self getJSQMessageAtPos:indexPath.row];
-        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+    if ([self hasTimestampForRowAtIndexPath:indexPath]) {
+        Msg* msg=[_messages objectAtIndex:indexPath.row];
+        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[msg getTimestampDate]];
     }
     
     return nil;
@@ -588,13 +603,6 @@
         return nil;
     }
     
-    if (indexPath.item - 1 > 0) {
-        JSQMessage *previousMessage = [self getJSQMessageAtPos:indexPath.row-1];
-        if ([[previousMessage senderId] isEqualToString:message.senderId]) {
-            return nil;
-        }
-    }
-    
     /**
      *  Don't specify attributes to use the defaults.
      */
@@ -603,14 +611,8 @@
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    if (indexPath.item % 3 == 0) {
-        JSQMessage *message = [self getJSQMessageAtPos:indexPath.row];
-        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
-    }
-    
-    
-    return nil;
+    NSMutableAttributedString* attrString=[[NSMutableAttributedString alloc] initWithString:@"bottomLabel"];
+    return attrString;
 }
 
 #pragma mark - UICollectionView DataSource
@@ -679,7 +681,7 @@
      *
      *  Show a timestamp for every 3rd message
      */
-    if (indexPath.item % 3 == 0) {
+    if ([self hasTimestampForRowAtIndexPath:indexPath]) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     
@@ -710,7 +712,7 @@
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 0.0f;
+    return kJSQMessagesCollectionViewCellLabelHeightDefault;
 }
 
 #pragma mark - Responding to collection view tap events

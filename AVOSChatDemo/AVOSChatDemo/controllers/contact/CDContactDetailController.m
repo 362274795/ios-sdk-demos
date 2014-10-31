@@ -56,6 +56,8 @@
     //    button.userInteractionEnabled = YES;
     [button addTarget:self action:@selector(startChat:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -73,10 +75,12 @@
     CDChatRoomController *controller = [CDChatRoomController messagesViewController];
     controller.chatUser = self.user;
     controller.type = CDMsgRoomTypeSingle;
-    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:controller];
-    [self presentViewController:nc animated:YES completion:nil];
-    
-    //[self.navigationController pushViewController:controller animated:YES];
+    //self.tabBarController.selectedIndex = 0;
+    //[nav popToRootViewControllerAnimated:NO];
+    UINavigationController* nav=[[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentViewController:nav animated:YES completion:nil];
+    //[self.navigationController pushViewController:nav animated:YES];
+    //[self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 @end

@@ -17,4 +17,9 @@
 @property (nonatomic) CDMsgRoomType type;
 @property (nonatomic, strong) AVGroup *group;
 
+@property (strong, nonatomic) JSQMessagesBubbleImage *outgoingBubbleImageData;
+@property (strong, nonatomic) JSQMessagesBubbleImage *incomingBubbleImageData;
+
+@property (nonatomic, strong) NSMutableArray *messages;
+
 @end
