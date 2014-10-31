@@ -1,6 +1,6 @@
 # LeanCloud iOS SDK Demos
 
-本目录存放iOS的示例项目，包括：
+本目录存放 iOS 的示例项目，包括：
 
 * [AVOSDemo](AVOSDemo)：一个展示 LeanCloud SDK 的各种基础和高级用法示例。
 * [AVOSChatDemo](AVOSChatDemo)：一个帮助使用 LeanCloud 的开发者快速实现具有实时通讯功能的应用。
