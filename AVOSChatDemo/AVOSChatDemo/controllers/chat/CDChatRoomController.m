@@ -319,6 +319,10 @@
     JSQMessage* copyMessage;
     if(msg.type==CDMsgTypeText){
         copyMessage=[JSQTextMessage messageWithSenderId:fromUser.objectId displayName:fromUser.username text:msg.content];
+    }else if(msg.type==CDMsgTypeAudio){
+        copyMessage=[JSQTextMessage messageWithSenderId:fromUser.objectId displayName:fromUser.username text:@"语音"];
+    }else if(msg.type==CDMsgTypeLocation){
+        copyMessage=[JSQTextMessage messageWithSenderId:fromUser.objectId displayName:fromUser.username text:msg.content];
     }else{
         id<JSQMessageMediaData> messageData;
         if(msg.type==CDMsgTypeImage){
@@ -609,10 +613,17 @@
     return [[NSAttributedString alloc] initWithString:message.senderDisplayName];
 }
 
+
+
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSMutableAttributedString* attrString=[[NSMutableAttributedString alloc] initWithString:@"bottomLabel"];
-    return attrString;
+    Msg* msg=[_messages objectAtIndex:indexPath.row];
+    if([msg fromMe]){
+        NSMutableAttributedString* attrString=[[NSMutableAttributedString alloc] initWithString:msg.getStatusDesc];
+        return attrString;
+    }else{
+        return nil;
+    }
 }
 
 #pragma mark - UICollectionView DataSource
@@ -699,20 +710,18 @@
         return 0.0f;
     }
     
-    if (indexPath.item - 1 > 0) {
-        JSQMessage *previousMessage = [self getJSQMessageAtPos:indexPath.row-1];
-        if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
-            return 0.0f;
-        }
-    }
-    
     return kJSQMessagesCollectionViewCellLabelHeightDefault;
 }
 
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    Msg* msg=[_messages objectAtIndex:indexPath.row];
+    if(msg.fromMe){
+        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }else{
+        return 0.0f;
+    }
 }
 
 #pragma mark - Responding to collection view tap events

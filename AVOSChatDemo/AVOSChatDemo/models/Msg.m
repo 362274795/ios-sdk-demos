@@ -118,11 +118,17 @@
         case CDMsgStatusSendFailed:
             return @"发送失败";
         case CDMsgStatusSendReceived:
-            return @"已接收";
+            return @"";
         case CDMsgStatusSendSucceed:
             return @"已发送";
     }
     [NSException raise:@"invalid status" format:nil];
+}
+
+-(BOOL)fromMe{
+    User* curUser=[User currentUser];
+    assert(curUser!=nil);
+    return [fromPeerId isEqualToString:curUser.objectId];
 }
 
 @end

@@ -61,5 +61,6 @@ typedef enum : NSUInteger{
 -(NSDictionary*)toDatabaseDict;
 -(NSDate*)getTimestampDate;
 -(NSString*)getStatusDesc;
+-(BOOL)fromMe;
 
 @end
