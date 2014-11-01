@@ -294,18 +294,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		701C827119F92DB80086443F /* avobject */ = {
-			isa = PBXGroup;
-			children = (
-				701C825B19F92CA60086443F /* AddRequest.h */,
-				701C825C19F92CA60086443F /* AddRequest.m */,
-				701C825F19F92CA60086443F /* User.h */,
-				701C826019F92CA60086443F /* User.m */,
-			);
-			name = avobject;
-			path = controllers/avobject;
-			sourceTree = "<group>";
-		};
 		701C827219F92DD80086443F /* service */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,6 +308,18 @@
 			);
 			name = service;
 			path = controllers/service;
+			sourceTree = "<group>";
+		};
+		70639A631A053C3B00B0FA64 /* avobject */ = {
+			isa = PBXGroup;
+			children = (
+				701C825B19F92CA60086443F /* AddRequest.h */,
+				701C825C19F92CA60086443F /* AddRequest.m */,
+				701C825F19F92CA60086443F /* User.h */,
+				701C826019F92CA60086443F /* User.m */,
+			);
+			name = avobject;
+			path = controllers/avobject;
 			sourceTree = "<group>";
 		};
 		8C05A04B1981FEA3008B4CC6 /* chat */ = {
@@ -632,10 +632,10 @@
 		8CF21DD0197FCCC1002B9220 /* AVOSChatDemo */ = {
 			isa = PBXGroup;
 			children = (
+				70639A631A053C3B00B0FA64 /* avobject */,
 				8CF21DD9197FCCC1002B9220 /* CDAppDelegate.h */,
 				8CF21DDA197FCCC1002B9220 /* CDAppDelegate.m */,
 				701C827219F92DD80086443F /* service */,
-				701C827119F92DB80086443F /* avobject */,
 				8CB308181980BABB00BDC34D /* controllers */,
 				8CF21DDC197FCCC1002B9220 /* Images.xcassets */,
 				8C925C1519873F0B00D2750B /* models */,
