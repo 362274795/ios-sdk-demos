@@ -62,11 +62,17 @@ typedef enum AVLogLevel : NSUInteger {
 
 #define kAVDefaultNetworkTimeoutInterval 10.0
 
-
 /**
  *  AVOSCloud is the main Class for AVOSCloud SDK
  */
 @interface AVOSCloud : NSObject
+
+/**
+ *  设置SDK信息显示
+ *  @param verbosePolicy SDK信息显示策略，kAVVerboseShow为显示，
+ *         kAVVerboseNone为不显示，kAVVerboseAuto在DEBUG时显示
+ */
++ (void)setVerbosePolicy:(AVVerbosePolicy)verbosePolicy;
 
 /** @name Connecting to AVOS Cloud */
 
@@ -198,9 +204,8 @@ typedef enum AVLogLevel : NSUInteger {
  *  请求短信验证码，需要开启手机短信验证 API 选项。
  *  发送短信到指定的手机上，获取6位数字验证码。
  *  @param phoneNumber 11位电话号码
- *  @param appName 应用名称，传nil为默认值您的应用名称
- *  @param operation 操作名称，传nil为默认值"短信认证"
- *  @param ttl 短信过期时间，单位分钟，传0为默认值10分钟
+ *  @param templateName 模板名称，传nil为默认模板
+ *  @param variables 模板中使用的变量
  *  @param callback 回调结果
  */
 +(void)requestSmsCodeWithPhoneNumber:(NSString *)phoneNumber

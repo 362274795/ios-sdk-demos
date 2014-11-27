@@ -214,6 +214,15 @@ typedef void (^AVStatusResultBlock)(AVStatus *status, NSError *error);
 -(void)follow:(NSString*)userId andCallback:(AVBooleanResultBlock)callback;
 
 /**
+ *  通过ID来关注其他用户
+ *  @warning 如果需要被关注者收到消息 需要手动给他发送一条AVStatus.
+ *  @param userId 要关注的用户objectId
+ *  @param dictionary 添加的自定义属性
+ *  @param callback 回调结果
+ */
+-(void)follow:(NSString*)userId userDictionary:(NSDictionary *)dictionary andCallback:(AVBooleanResultBlock)callback;
+
+/**
  *  通过ID来取消关注其他用户
  *
  *  @param userId 要取消关注的用户objectId
@@ -270,4 +279,9 @@ typedef void (^AVStatusResultBlock)(AVStatus *status, NSError *error);
  *  设置查询的Inbox的类型
  */
 @property(nonatomic, copy) AVStatusType *inboxType;
+
+/**
+ *  查询结果是否已经到结尾
+ */
+@property(nonatomic)BOOL end;
 @end

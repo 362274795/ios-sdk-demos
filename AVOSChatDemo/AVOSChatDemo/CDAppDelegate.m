@@ -20,6 +20,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    //DEBUG环境下打印应用环境信息
+    [AVOSCloud setVerbosePolicy:kAVVerboseAuto];
 #if USE_US
     [AVOSCloud useAVCloudUS];
 #endif
@@ -27,7 +29,7 @@
                       clientKey:AVOSAppKey];
     //统计应用启动情况
     [AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    
+
     if (SYSTEM_VERSION >= 7.0) {
         [[UINavigationBar appearance] setBarTintColor:NAVIGATION_COLOR];
         [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
@@ -85,16 +87,18 @@
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
-    //推送功能打开时, 注册当前的设备, 同时记录用户活跃, 方便进行有针对的推送
+    //聊天接收推送消息必需
     AVInstallation *currentInstallation = [AVInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (error) {
+            [self showErrorWithTitle:@"Installation保存失败" error:error];
+        }
+    }];
 }
 
 -(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    
-    //可选 通过统计功能追踪打开提醒失败, 或者用户不授权本应用推送
-    [AVAnalytics event:@"开启推送失败" label:[error description]];
+    [self showErrorWithTitle:@"开启推送失败" error:error];
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
@@ -128,4 +132,14 @@
     self.window.rootViewController = tab;
 }
 
+- (void)showErrorWithTitle:(NSString *)title error:(NSError *)error {
+    NSString *content = [NSString stringWithFormat:@"%@", error];
+    NSLog(@"%@\n%@", title, content);
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:title
+                                                   message:content
+                                                  delegate:nil
+                                         cancelButtonTitle:@"知道了"
+                                         otherButtonTitles:nil, nil];
+    [alert show];
+}
 @end

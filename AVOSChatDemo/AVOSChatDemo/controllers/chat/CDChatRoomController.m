@@ -57,7 +57,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self messageUpdated:nil];
-//    [AVAnalytics event:@"likebutton" attributes:@{@"source":@{@"view": @"week"}, @"do":@"unfollow"}];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -156,14 +155,6 @@
         return JSBubbleMediaTypeImage;
     }
     return JSBubbleMediaTypeText;
-
-//    if([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Text"]){
-//        return JSBubbleMediaTypeText;
-//    }else if ([[self.messageArray objectAtIndex:indexPath.row] objectForKey:@"Image"]){
-//        return JSBubbleMediaTypeImage;
-//    }
-//    
-//    return -1;
 }
 
 - (UIButton *)sendButton

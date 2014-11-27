@@ -32,7 +32,16 @@ extern NSString *const kPFDeviceType;
 @compatibility_alias UIView NSView;
 #endif
 
-
+typedef enum : NSUInteger {
+    kAVVerboseShow,
+    kAVVerboseNone,
+    kAVVerboseAuto = kAVVerboseShow
+} AVVerbosePolicy;
+#if DEBUG
+#define kAVVerboseAuto kAVVerboseShow
+#else
+#define kAVVerboseAuto kAVVerboseNone
+#endif
 /// Cache policies
 typedef NS_ENUM(int, AVCachePolicy){
     ///Ignore Cache

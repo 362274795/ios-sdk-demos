@@ -239,7 +239,7 @@
 	if ([data isKindOfClass:[UIImage class]])
 	{
 		// image
-		NSLog(@"show the image here");
+//		NSLog(@"show the image here");
         self.bubbleView.data = data;
 	}
 	else if ([data isKindOfClass:[NSData class]])

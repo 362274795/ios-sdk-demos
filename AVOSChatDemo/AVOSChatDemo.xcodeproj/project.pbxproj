@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		8C05A0521981FEE4008B4CC6 /* CDChatListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C05A0511981FEE4008B4CC6 /* CDChatListController.m */; };
+		8C443EDB1A1C781D007A13FA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C443ED21A1C781D007A13FA /* Icon@2x.png */; };
+		8C443EDC1A1C781D007A13FA /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C443ED31A1C781D007A13FA /* iTunesArtwork.png */; };
+		8C443EDD1A1C781D007A13FA /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C443ED41A1C781D007A13FA /* iTunesArtwork@2x.png */; };
 		8C470C5C199257E3006A4E87 /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C470C5B199257E3006A4E87 /* libZXingWidget.a */; };
 		8C470C9D19926019006A4E87 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C470C9C19926019006A4E87 /* libiconv.dylib */; };
 		8C470CAF1992625B006A4E87 /* DataMatrix.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C470CAA1992625B006A4E87 /* DataMatrix.mm */; };
@@ -15,9 +18,6 @@
 		8C470CB11992625B006A4E87 /* QREncoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C470CAE1992625B006A4E87 /* QREncoder.mm */; };
 		8C470CB8199264B0006A4E87 /* CDChatDetailController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8C470CB7199264B0006A4E87 /* CDChatDetailController.mm */; };
 		8C470CBB19926893006A4E87 /* CDChatConfirmController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C470CBA19926893006A4E87 /* CDChatConfirmController.m */; };
-		8C746DD319F914310096B58B /* AVOSCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C746DD119F914310096B58B /* AVOSCloud.framework */; };
-		8C746DD419F914310096B58B /* AVOSCloudSNS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C746DD219F914310096B58B /* AVOSCloudSNS.framework */; };
-		8C76A193199372E800709CE4 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C76A192199372E800709CE4 /* Icon@2x.png */; };
 		8C76C24B19888CFB000940E1 /* CDPopMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C76C24A19888CFB000940E1 /* CDPopMenuItem.m */; };
 		8C76C25219888DD5000940E1 /* CDPopMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C76C25119888DD5000940E1 /* CDPopMenu.m */; };
 		8C76C255198890D0000940E1 /* CDPopMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C76C254198890D0000940E1 /* CDPopMenuItemCell.m */; };
@@ -140,18 +140,23 @@
 		8CB3086F198111FC00BDC34D /* ok@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CB3086B198111FC00BDC34D /* ok@2x.png */; };
 		8CB3087219811A7100BDC34D /* blue_expand_highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CB3087019811A7100BDC34D /* blue_expand_highlight@2x.png */; };
 		8CB3087319811A7100BDC34D /* blue_expand_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8CB3087119811A7100BDC34D /* blue_expand_normal@2x.png */; };
+		8CC131B51A27035500B1D247 /* AVOSCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC131B31A27035500B1D247 /* AVOSCloud.framework */; };
+		8CC131B61A27035500B1D247 /* AVOSCloudSNS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC131B41A27035500B1D247 /* AVOSCloudSNS.framework */; };
+		8CC131B81A27052200B1D247 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CC131B71A27052200B1D247 /* Images.xcassets */; };
 		8CF21DCB197FCCC1002B9220 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF21DCA197FCCC1002B9220 /* Foundation.framework */; };
 		8CF21DCD197FCCC1002B9220 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF21DCC197FCCC1002B9220 /* CoreGraphics.framework */; };
 		8CF21DCF197FCCC1002B9220 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF21DCE197FCCC1002B9220 /* UIKit.framework */; };
 		8CF21DD5197FCCC1002B9220 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8CF21DD3197FCCC1002B9220 /* InfoPlist.strings */; };
 		8CF21DD7197FCCC1002B9220 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF21DD6197FCCC1002B9220 /* main.m */; };
 		8CF21DDB197FCCC1002B9220 /* CDAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF21DDA197FCCC1002B9220 /* CDAppDelegate.m */; };
-		8CF21DDD197FCCC1002B9220 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CF21DDC197FCCC1002B9220 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8C05A0501981FEE4008B4CC6 /* CDChatListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDChatListController.h; sourceTree = "<group>"; };
 		8C05A0511981FEE4008B4CC6 /* CDChatListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDChatListController.m; sourceTree = "<group>"; };
+		8C443ED21A1C781D007A13FA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		8C443ED31A1C781D007A13FA /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
+		8C443ED41A1C781D007A13FA /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		8C470C5B199257E3006A4E87 /* libZXingWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libZXingWidget.a; sourceTree = "<group>"; };
 		8C470C61199259A7006A4E87 /* ArrayAndStringCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayAndStringCategories.h; sourceTree = "<group>"; };
 		8C470C62199259A7006A4E87 /* AztecReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AztecReader.h; sourceTree = "<group>"; };
@@ -216,9 +221,6 @@
 		8C470CB7199264B0006A4E87 /* CDChatDetailController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CDChatDetailController.mm; sourceTree = "<group>"; };
 		8C470CB919926893006A4E87 /* CDChatConfirmController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDChatConfirmController.h; sourceTree = "<group>"; };
 		8C470CBA19926893006A4E87 /* CDChatConfirmController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDChatConfirmController.m; sourceTree = "<group>"; };
-		8C746DD119F914310096B58B /* AVOSCloud.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloud.framework; sourceTree = "<group>"; };
-		8C746DD219F914310096B58B /* AVOSCloudSNS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloudSNS.framework; sourceTree = "<group>"; };
-		8C76A192199372E800709CE4 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		8C76C24919888CFB000940E1 /* CDPopMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPopMenuItem.h; sourceTree = "<group>"; };
 		8C76C24A19888CFB000940E1 /* CDPopMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPopMenuItem.m; sourceTree = "<group>"; };
 		8C76C25019888DD5000940E1 /* CDPopMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPopMenu.h; sourceTree = "<group>"; };
@@ -388,7 +390,10 @@
 		8CB3086B198111FC00BDC34D /* ok@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ok@2x.png"; sourceTree = "<group>"; };
 		8CB3087019811A7100BDC34D /* blue_expand_highlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue_expand_highlight@2x.png"; sourceTree = "<group>"; };
 		8CB3087119811A7100BDC34D /* blue_expand_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue_expand_normal@2x.png"; sourceTree = "<group>"; };
-		8CF21DC7197FCCC1002B9220 /* AVOSChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVOSChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8CC131B31A27035500B1D247 /* AVOSCloud.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloud.framework; sourceTree = "<group>"; };
+		8CC131B41A27035500B1D247 /* AVOSCloudSNS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AVOSCloudSNS.framework; sourceTree = "<group>"; };
+		8CC131B71A27052200B1D247 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8CF21DC7197FCCC1002B9220 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CF21DCA197FCCC1002B9220 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8CF21DCC197FCCC1002B9220 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		8CF21DCE197FCCC1002B9220 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -398,7 +403,6 @@
 		8CF21DD8197FCCC1002B9220 /* AVOSChatDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVOSChatDemo-Prefix.pch"; sourceTree = "<group>"; };
 		8CF21DD9197FCCC1002B9220 /* CDAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CDAppDelegate.h; sourceTree = "<group>"; };
 		8CF21DDA197FCCC1002B9220 /* CDAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CDAppDelegate.m; sourceTree = "<group>"; };
-		8CF21DDC197FCCC1002B9220 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -412,13 +416,13 @@
 				8CB3085B1980FC1400BDC34D /* SystemConfiguration.framework in Frameworks */,
 				8CB308591980FBF900BDC34D /* CoreTelephony.framework in Frameworks */,
 				8CB308571980FBEC00BDC34D /* MobileCoreServices.framework in Frameworks */,
-				8C746DD419F914310096B58B /* AVOSCloudSNS.framework in Frameworks */,
+				8CC131B61A27035500B1D247 /* AVOSCloudSNS.framework in Frameworks */,
 				8CB308551980FBD900BDC34D /* CoreLocation.framework in Frameworks */,
 				8CF21DCD197FCCC1002B9220 /* CoreGraphics.framework in Frameworks */,
 				8CF21DCF197FCCC1002B9220 /* UIKit.framework in Frameworks */,
 				8C470C5C199257E3006A4E87 /* libZXingWidget.a in Frameworks */,
 				8CF21DCB197FCCC1002B9220 /* Foundation.framework in Frameworks */,
-				8C746DD319F914310096B58B /* AVOSCloud.framework in Frameworks */,
+				8CC131B51A27035500B1D247 /* AVOSCloud.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +442,16 @@
 				8C470CBA19926893006A4E87 /* CDChatConfirmController.m */,
 			);
 			path = chat;
+			sourceTree = "<group>";
+		};
+		8C443ECB1A1C781D007A13FA /* appicons */ = {
+			isa = PBXGroup;
+			children = (
+				8C443ED21A1C781D007A13FA /* Icon@2x.png */,
+				8C443ED31A1C781D007A13FA /* iTunesArtwork.png */,
+				8C443ED41A1C781D007A13FA /* iTunesArtwork@2x.png */,
+			);
+			path = appicons;
 			sourceTree = "<group>";
 		};
 		8C470C60199259A7006A4E87 /* ZXing */ = {
@@ -807,8 +821,9 @@
 		8CB3083F1980E9FD00BDC34D /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				8CC131B71A27052200B1D247 /* Images.xcassets */,
+				8C443ECB1A1C781D007A13FA /* appicons */,
 				8C9D2DD419CB2CAF007EA70D /* image_placeholder@2x.png */,
-				8C76A192199372E800709CE4 /* Icon@2x.png */,
 				8CB308411980E9FD00BDC34D /* input_bg_bottom@2x.png */,
 				8CB308401980E9FD00BDC34D /* input_bg_top@2x.png */,
 				8CB3084A1980F69F00BDC34D /* login */,
@@ -874,7 +889,7 @@
 		8CF21DC8197FCCC1002B9220 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8CF21DC7197FCCC1002B9220 /* AVOSChatDemo.app */,
+				8CF21DC7197FCCC1002B9220 /* ChatApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -882,16 +897,16 @@
 		8CF21DC9197FCCC1002B9220 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8C746DD119F914310096B58B /* AVOSCloud.framework */,
-				8C746DD219F914310096B58B /* AVOSCloudSNS.framework */,
-				8C470C9C19926019006A4E87 /* libiconv.dylib */,
-				8C470C5B199257E3006A4E87 /* libZXingWidget.a */,
+				8CC131B31A27035500B1D247 /* AVOSCloud.framework */,
+				8CC131B41A27035500B1D247 /* AVOSCloudSNS.framework */,
 				8CF21DCC197FCCC1002B9220 /* CoreGraphics.framework */,
 				8CB308541980FBD900BDC34D /* CoreLocation.framework */,
 				8CB308581980FBF900BDC34D /* CoreTelephony.framework */,
 				8CF21DCA197FCCC1002B9220 /* Foundation.framework */,
+				8C470C9C19926019006A4E87 /* libiconv.dylib */,
 				8C925C1E19876D8100D2750B /* libicucore.dylib */,
 				8C925CB61987C20800D2750B /* libsqlite3.dylib */,
+				8C470C5B199257E3006A4E87 /* libZXingWidget.a */,
 				8CB308561980FBEC00BDC34D /* MobileCoreServices.framework */,
 				8CB3085A1980FC1400BDC34D /* SystemConfiguration.framework */,
 				8CF21DCE197FCCC1002B9220 /* UIKit.framework */,
@@ -905,7 +920,6 @@
 				8CF21DD9197FCCC1002B9220 /* CDAppDelegate.h */,
 				8CF21DDA197FCCC1002B9220 /* CDAppDelegate.m */,
 				8CB308181980BABB00BDC34D /* controllers */,
-				8CF21DDC197FCCC1002B9220 /* Images.xcassets */,
 				8C925C1519873F0B00D2750B /* models */,
 				8CB3083F1980E9FD00BDC34D /* resources */,
 				8CB308481980ED0600BDC34D /* settings */,
@@ -930,9 +944,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8CF21DC6197FCCC1002B9220 /* AVOSChatDemo */ = {
+		8CF21DC6197FCCC1002B9220 /* ChatApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8CF21DF3197FCCC1002B9220 /* Build configuration list for PBXNativeTarget "AVOSChatDemo" */;
+			buildConfigurationList = 8CF21DF3197FCCC1002B9220 /* Build configuration list for PBXNativeTarget "ChatApp" */;
 			buildPhases = (
 				8CF21DC3197FCCC1002B9220 /* Sources */,
 				8CF21DC4197FCCC1002B9220 /* Frameworks */,
@@ -942,9 +956,9 @@
 			);
 			dependencies = (
 			);
-			name = AVOSChatDemo;
+			name = ChatApp;
 			productName = AVOSChatDemo;
-			productReference = 8CF21DC7197FCCC1002B9220 /* AVOSChatDemo.app */;
+			productReference = 8CF21DC7197FCCC1002B9220 /* ChatApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -970,7 +984,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8CF21DC6197FCCC1002B9220 /* AVOSChatDemo */,
+				8CF21DC6197FCCC1002B9220 /* ChatApp */,
 			);
 		};
 /* End PBXProject section */
@@ -988,6 +1002,7 @@
 				8C925CA01987768E00D2750B /* messageSent.aiff in Resources */,
 				8C925C9C1987768E00D2750B /* send-highlighted@2x.png in Resources */,
 				8C925C901987768E00D2750B /* bubble-square-outgoing@2x.png in Resources */,
+				8CC131B81A27052200B1D247 /* Images.xcassets in Resources */,
 				8CB3085F1981007F00BDC34D /* bottom_bar_normal@2x.png in Resources */,
 				8CB3086419810B3600BDC34D /* background@2x.png in Resources */,
 				8C925C7D1987768E00D2750B /* bubble-default-outgoing.png in Resources */,
@@ -1014,7 +1029,6 @@
 				8C925C761987768E00D2750B /* bubble-default-incoming-selected@2x.png in Resources */,
 				8CA0554319851E28002DA6A1 /* wechat@2x.png in Resources */,
 				8C925C871987768E00D2750B /* bubble-flat-outgoing.png in Resources */,
-				8C76A193199372E800709CE4 /* Icon@2x.png in Resources */,
 				8C925C8D1987768E00D2750B /* bubble-square-outgoing-selected.png in Resources */,
 				8C925C841987768E00D2750B /* bubble-flat-outgoing-old@2x.png in Resources */,
 				8CB3084E1980F69F00BDC34D /* login@2x.png in Resources */,
@@ -1022,6 +1036,7 @@
 				8C925C921987768E00D2750B /* bubble-typing@2x.png in Resources */,
 				8C925C931987768E00D2750B /* input-bar-flat.png in Resources */,
 				8C925C9D1987768E00D2750B /* send.png in Resources */,
+				8C443EDC1A1C781D007A13FA /* iTunesArtwork.png in Resources */,
 				8CB3086D198111FC00BDC34D /* cancel@2x.png in Resources */,
 				8C76C2631988B7EA000940E1 /* menu_background@2x.png in Resources */,
 				8C925C9B1987768E00D2750B /* send-highlighted.png in Resources */,
@@ -1046,12 +1061,13 @@
 				8C925C991987768E00D2750B /* PhotoIcon.png in Resources */,
 				8CB308431980E9FD00BDC34D /* input_bg_bottom@2x.png in Resources */,
 				8C925C8B1987768E00D2750B /* bubble-square-incoming.png in Resources */,
+				8C443EDB1A1C781D007A13FA /* Icon@2x.png in Resources */,
 				8C925C9F1987768E00D2750B /* messageReceived.aiff in Resources */,
 				8C925C771987768E00D2750B /* bubble-default-incoming.png in Resources */,
-				8CF21DDD197FCCC1002B9220 /* Images.xcassets in Resources */,
 				8C925C971987768E00D2750B /* input-field.png in Resources */,
 				8C925C981987768E00D2750B /* input-field@2x.png in Resources */,
 				8CB3086C198111FC00BDC34D /* cancel_seelected@2x.png in Resources */,
+				8C443EDD1A1C781D007A13FA /* iTunesArtwork@2x.png in Resources */,
 				8C76C26019889E2B000940E1 /* menu_add_scan@2x.png in Resources */,
 				8C925C8E1987768E00D2750B /* bubble-square-outgoing-selected@2x.png in Resources */,
 				8C925C9E1987768E00D2750B /* send@2x.png in Resources */,
@@ -1163,8 +1179,6 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
-				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1199,7 +1213,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1283,7 +1297,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8CF21DF3197FCCC1002B9220 /* Build configuration list for PBXNativeTarget "AVOSChatDemo" */ = {
+		8CF21DF3197FCCC1002B9220 /* Build configuration list for PBXNativeTarget "ChatApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8CF21DF4197FCCC1002B9220 /* Debug */,
