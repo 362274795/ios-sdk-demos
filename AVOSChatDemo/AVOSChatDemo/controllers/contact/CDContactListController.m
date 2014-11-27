@@ -42,8 +42,7 @@ enum : NSUInteger {
 
 - (void)startFetchUserList {
     AVQuery * query = [AVUser query];
-    query.cachePolicy = kAVCachePolicyIgnoreCache;
-    
+    query.cachePolicy = kAVCachePolicyIgnoreCache;    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (objects) {
             NSMutableArray *users = [NSMutableArray array];

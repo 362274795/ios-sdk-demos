@@ -65,6 +65,7 @@ enum : NSUInteger {
         controller.group = group;
         [self.navigationController pushViewController:controller animated:YES];
     }];
+
 }
 
 - (void)addScan {

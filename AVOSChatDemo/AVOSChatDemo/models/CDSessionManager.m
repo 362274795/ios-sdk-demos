@@ -70,6 +70,7 @@ static BOOL initialized = NO;
     if (![_database tableExists:@"sessions"]) {
         [_database executeUpdate:@"create table \"sessions\" (\"type\" integer, \"otherid\" text)"];
     }
+    [AVGroup setDefaultDelegate:self];
     [_session openWithPeerId:[AVUser currentUser].username];
 
     FMResultSet *rs = [_database executeQuery:@"select \"type\", \"otherid\" from \"sessions\""];
@@ -92,7 +93,13 @@ static BOOL initialized = NO;
         }
         [_chatRooms addObject:dict];
     }
-    [_session watchPeerIds:peerIds];
+    [_session watchPeerIds:peerIds callback:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"watch success");
+        } else {
+            NSLog(@"%@", error);
+        }
+    }];
     initialized = YES;
 }
 
@@ -118,12 +125,31 @@ static BOOL initialized = NO;
         }
     }
     if (!exist) {
-        [_session watchPeerIds:@[peerId]];
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-        [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeSingle] forKey:@"type"];
-        [dict setObject:peerId forKey:@"otherid"];
-        [_chatRooms addObject:dict];
-        [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeSingle], peerId]];
+        [_session watchPeerIds:@[peerId] callback:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                NSLog(@"watch success");
+                NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeSingle] forKey:@"type"];
+                [dict setObject:peerId forKey:@"otherid"];
+                [_chatRooms addObject:dict];
+                [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeSingle], peerId]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:_session userInfo:nil];
+            } else {
+                NSLog(@"%@", error);
+            }
+        }];
+    }
+}
+
+- (void)unwatchPeerId:(NSString *)peerId {
+    if (peerId) {
+        [_session unwatchPeerIds:@[peerId] callback:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                NSLog(@"%@ unwatched!", peerId);
+            } else {
+                NSLog(@"%@", error);
+            }
+        }];
     }
 }
 
@@ -147,6 +173,7 @@ static BOOL initialized = NO;
         [dict setObject:groupId forKey:@"otherid"];
         [_chatRooms addObject:dict];
         [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeGroup], groupId]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
     }
     return [AVGroup getGroupWithGroupId:groupId session:_session];;
 }
@@ -176,7 +203,7 @@ static BOOL initialized = NO;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
     NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     AVMessage *messageObject = [AVMessage messageForPeerWithSession:_session toPeerId:peerId payload:payload];
-    [_session sendMessage:messageObject];
+    [_session sendMessage:messageObject requestReceipt:YES];
     
     dict = [NSMutableDictionary dictionary];
     [dict setObject:_session.peerId forKey:@"fromid"];
@@ -202,7 +229,7 @@ static BOOL initialized = NO;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
     NSString *payload = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     AVMessage *messageObject = [AVMessage messageForPeerWithSession:_session toPeerId:peerId payload:payload];
-    [_session sendMessage:messageObject];
+    [_session sendMessage:messageObject requestReceipt:YES];
     //    [_session sendMessage:payload isTransient:NO toPeerIds:@[peerId]];
     
     dict = [NSMutableDictionary dictionary];
@@ -359,55 +386,8 @@ static BOOL initialized = NO;
         [dict setObject:object forKey:@"object"];
         [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"object\", \"time\") values (:fromid, :toid, :type, :object, :time)" withParameterDictionary:dict];
     }
-    
-    BOOL exist = NO;
-    for (NSDictionary *dict in _chatRooms) {
-        CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
-        NSString *otherid = [dict objectForKey:@"otherid"];
-        if (type == CDChatRoomTypeSingle && [message.fromPeerId isEqualToString:otherid]) {
-            exist = YES;
-            break;
-        }
-    }
-    if (!exist) {
-        [self addChatWithPeerId:message.fromPeerId];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:session userInfo:nil];
-    }
+    [self addChatWithPeerId:message.fromPeerId];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:session userInfo:dict];
-    //    NSError *error;
-    //    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
-    //    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-    //
-    //    if (error == nil) {
-    //        KAMessage *chatMessage = nil;
-    //        if ([jsonDict objectForKey:@"st"]) {
-    //            NSString *displayName = [jsonDict objectForKey:@"dn"];
-    //            NSString *status = [jsonDict objectForKey:@"st"];
-    //            if ([status isEqualToString:@"on"]) {
-    //                chatMessage = [[KAMessage alloc] initWithDisplayName:displayName Message:@"上线了" fromMe:YES];
-    //            } else {
-    //                chatMessage = [[KAMessage alloc] initWithDisplayName:displayName Message:@"下线了" fromMe:YES];
-    //            }
-    //            chatMessage.isStatus = YES;
-    //        } else {
-    //            NSString *displayName = [jsonDict objectForKey:@"dn"];
-    //            NSString *message = [jsonDict objectForKey:@"msg"];
-    //            if ([displayName isEqualToString:MY_NAME]) {
-    //                chatMessage = [[KAMessage alloc] initWithDisplayName:displayName Message:message fromMe:YES];
-    //            } else {
-    //                chatMessage = [[KAMessage alloc] initWithDisplayName:displayName Message:message fromMe:NO];
-    //            }
-    //        }
-    //
-    //        if (chatMessage) {
-    //            [_messages addObject:chatMessage];
-    //            //            [self.tableView beginUpdates];
-    //            [self.tableView reloadData];
-    //            //            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_messages.count - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    //            [self.tableView scrollRectToVisible:self.tableView.tableFooterView.frame animated:YES];
-    //            //            [self.tableView endUpdates];
-    //        }
-    //    }
 }
 
 - (void)session:(AVSession *)session messageSendFailed:(AVMessage *)message error:(NSError *)error {
@@ -418,6 +398,11 @@ static BOOL initialized = NO;
 - (void)session:(AVSession *)session messageSendFinished:(AVMessage *)message {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     NSLog(@"session:%@ message:%@ toPeerId:%@", session.peerId, message, message.toPeerId);
+}
+
+- (void)session:(AVSession *)session messageArrived:(AVMessage *)message {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+
 }
 
 - (void)session:(AVSession *)session didReceiveStatus:(AVPeerStatus)status peerIds:(NSArray *)peerIds {
@@ -454,45 +439,16 @@ static BOOL initialized = NO;
         [dict setObject:object forKey:@"object"];
         [_database executeUpdate:@"insert into \"messages\" (\"fromid\", \"toid\", \"type\", \"object\", \"time\") values (:fromid, :toid, :type, :object, :time)" withParameterDictionary:dict];
     }
-
-    BOOL exist = NO;
-    for (NSDictionary *dict in _chatRooms) {
-        CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
-        NSString *otherid = [dict objectForKey:@"otherid"];
-        if (type == CDChatRoomTypeGroup && [group.groupId isEqualToString:otherid]) {
-            exist = YES;
-            break;
-        }
-    }
-    if (!exist) {
-        [self joinGroup:group.groupId];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
-    }
+    [self joinGroup:group.groupId];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MESSAGE_UPDATED object:group.session userInfo:dict];
 }
 
 - (void)group:(AVGroup *)group didReceiveEvent:(AVGroupEvent)event peerIds:(NSArray *)peerIds {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-    NSLog(@"group:%@ event:%lu peerIds:%@", group.groupId, event, peerIds);
+    NSLog(@"group:%@ event:%lu peerIds:%@", group.groupId, (long)event, peerIds);
     if (event == AVGroupEventSelfJoined) {
-        BOOL exist = NO;
-        for (NSDictionary *dict in _chatRooms) {
-            CDChatRoomType type = [[dict objectForKey:@"type"] integerValue];
-            NSString *otherid = [dict objectForKey:@"otherid"];
-            if (type == CDChatRoomTypeGroup && [group.groupId isEqualToString:otherid]) {
-                exist = YES;
-                break;
-            }
-        }
-        if (!exist) {
-            NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-            [dict setObject:[NSNumber numberWithInteger:CDChatRoomTypeGroup] forKey:@"type"];
-            [dict setObject:group.groupId forKey:@"otherid"];
-            [_chatRooms addObject:dict];
-            [_database executeUpdate:@"insert into \"sessions\" (\"type\", \"otherid\") values (?, ?)" withArgumentsInArray:@[[NSNumber numberWithInteger:CDChatRoomTypeGroup], group.groupId]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_SESSION_UPDATED object:group.session userInfo:nil];
-        }
+        [self joinGroup:group.groupId];
     }
 }
 
@@ -513,4 +469,15 @@ static BOOL initialized = NO;
     NSLog(@"group:%@ message:%@ success:%d", group.groupId, message, success);
 }
 
+- (AVSignature *)signatureForPeerWithPeerId:(NSString *)peerId watchedPeerIds:(NSArray *)watchedPeerIds action:(NSString *)action {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    NSLog(@"peerId:%@ action:%@", peerId, action);
+    return nil;
+}
+
+- (AVSignature *)signatureForGroupWithPeerId:(NSString *)peerId groupId:(NSString *)groupId groupPeerIds:(NSArray *)groupPeerIds action:(NSString *)action {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    NSLog(@"peerId:%@ groupId:%@ action:%@", peerId, groupId, action);
+    return nil;
+}
 @end

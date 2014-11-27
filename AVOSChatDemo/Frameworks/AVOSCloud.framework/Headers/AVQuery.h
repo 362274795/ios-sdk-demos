@@ -60,11 +60,28 @@
 + (AVCloudQueryResult *)doCloudQueryWithCQL:(NSString *)cql error:(NSError **)error;
 
 /*!
+ *  使用 CQL 查询
+ *  @param cql CQL 字符串
+ *  @param pvalues 参数列表
+ *  @param error 用于返回错误结果
+ *  @return 查询结果
+ */
++ (AVCloudQueryResult *)doCloudQueryWithCQL:(NSString *)cql pvalues:(NSArray *)pvalues error:(NSError **)error;
+
+/*!
  *  使用 CQL 异步查询
  *  @param cql CQL 字符串
  *  @param callback 查询结果回调
  */
 + (void)doCloudQueryInBackgroundWithCQL:(NSString *)cql callback:(AVCloudQueryCallback)callback;
+
+/*!
+ *  使用 CQL 异步查询
+ *  @param cql CQL 字符串
+ *  @param pvalues 参数列表
+ *  @param callback 查询结果回调
+ */
++ (void)doCloudQueryInBackgroundWithCQL:(NSString *)cql pvalues:(NSArray *)pvalues callback:(AVCloudQueryCallback)callback;
 
 /*!
  Initializes the query with a class name.
